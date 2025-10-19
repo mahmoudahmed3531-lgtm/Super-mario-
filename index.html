@@ -7,65 +7,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#03102a; --stage:#061c45; --ring:#0a2d6e; --line:#3ea3ff;
-    --text:#e9f4ff; --ok:#20d07a; --bad:#ff3e4e; --warn:#ffc107;
+    --bg:#070818; --stage:#0a1130; --ring:#1e2a6a; --line:#7b9dff;
+    --text:#eef5ff; --ok:#20d07a; --bad:#ff3e4e; --warn:#ffc107;
+    --neon1:#5c49ff; --neon2:#21d4fd; --neon3:#b721ff;
   }
   *{box-sizing:border-box}
   body{
     margin:0; font-family:"Cairo",system-ui,sans-serif; color:var(--text);
     min-height:100vh; display:grid; place-items:center; overflow-x:hidden;
     background:
-      radial-gradient(1200px 700px at 50% -200px,#1947b6 0%,transparent 60%),
-      linear-gradient(#010814,#03102a 30%, #010814);
+      radial-gradient(1600px 800px at 50% -300px,#0a1a4a 0%,transparent 60%),
+      linear-gradient(#060916,#0a0e24 35%, #060916);
   }
-  .wrap{width:min(1100px,96vw)}
-  /* ====== شريط علوي (وسائل المساعدة + العداد) ====== */
-  .top{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:12px}
+  .wrap{width:min(1100px,96vw); padding-bottom:64px}
+
+  /* ====== أعلى الصفحة ====== */
+  .top{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin:12px 0}
   .brand{font-weight:900; letter-spacing:.5px; font-size:clamp(20px,3vw,30px)}
   .brand span{color:#21d07a}
   .tools{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
   .pill{
-    background:linear-gradient(180deg,#113a86,#0b2663);
-    border:2px solid var(--line); color:#cfe9ff; border-radius:999px; padding:8px 14px;
-    font-weight:800; cursor:pointer; box-shadow:0 0 0 2px rgba(62,163,255,.2) inset, 0 8px 20px rgba(0,0,0,.25);
+    background:linear-gradient(180deg,#18348c,#0f255e);
+    border:2px solid var(--line); color:#dfeaff; border-radius:999px; padding:8px 14px;
+    font-weight:800; cursor:pointer; box-shadow:0 0 0 2px rgba(123,157,255,.2) inset, 0 8px 20px rgba(0,0,0,.25);
   }
   .pill:disabled{opacity:.45; filter:grayscale(1); cursor:not-allowed}
-  .badge{background:rgba(255,255,255,.06); border:1px solid #285fb1; padding:8px 12px; border-radius:999px; font-weight:800}
+  .badge{background:rgba(255,255,255,.06); border:1px solid #385ed6; padding:8px 12px; border-radius:999px; font-weight:800}
 
-  /* ====== المسرح الدائري ====== */
+  /* ====== المسرح + إضاءة RPG جديدة ====== */
   .stage{
     position:relative; padding:22px 18px 26px; border-radius:26px; overflow:hidden;
     border:2px solid var(--line); background:var(--stage);
-    box-shadow: 0 0 60px rgba(62,163,255,.22) inset, 0 0 120px rgba(62,163,255,.16);
+    box-shadow: 0 0 80px rgba(123,157,255,.25) inset, 0 0 140px rgba(123,157,255,.18);
+    isolation:isolate;
   }
-  /* دوائر الـ RPG */
-  .stage::before,.stage::after{
-    content:""; position:absolute; inset:-40% -10% auto -10%; height:140%;
+  /* حلقات نيون متحركة */
+  .glow,.glow2{
+    position:absolute; inset:-30% -10% auto -10%; height:160%;
     background:
-      radial-gradient(closest-side,#2258bf 0%, transparent 55%) 50% 40%/60% 60% no-repeat,
-      radial-gradient(closest-side,#14387f 0%, transparent 55%) 50% 40%/80% 80% no-repeat,
-      radial-gradient(closest-side,rgba(62,163,255,.6) 0%, transparent 65%) 50% 40%/100% 100% no-repeat;
-    opacity:.25; pointer-events:none; filter:blur(2px);
+      radial-gradient(closest-side, color-mix(in oklab, var(--neon1) 85%, transparent) 0%, transparent 60%) 30% 35%/60% 60% no-repeat,
+      radial-gradient(closest-side, color-mix(in oklab, var(--neon2) 85%, transparent) 0%, transparent 60%) 70% 45%/70% 70% no-repeat,
+      radial-gradient(closest-side, color-mix(in oklab, var(--neon3) 75%, transparent) 0%, transparent 65%) 50% 40%/100% 100% no-repeat;
+    opacity:.18; filter:blur(3px); pointer-events:none; z-index:-1;
+    animation: drift 14s linear infinite;
   }
-  .timerBar{height:8px; border-radius:8px; margin-bottom:14px;
+  .glow2{ animation-duration:20s; opacity:.12; transform:scale(1.2) rotate(8deg)}
+  @keyframes drift{ from{transform:translateX(-2%) translateY(0)} to{transform:translateX(2%) translateY(-2%)} }
+
+  .timerBar{height:10px; border-radius:8px; margin-bottom:14px;
     background:linear-gradient(90deg,var(--ok),#27d4ff,var(--warn),var(--bad));
-    transform-origin:left; box-shadow:0 0 14px rgba(62,163,255,.5)}
+    transform-origin:left; box-shadow:0 0 14px rgba(123,157,255,.5)}
   .q{position:relative; margin:10px auto 12px; text-align:center; font-size:clamp(18px,2.3vw,24px);
     font-weight:900; padding:16px 14px; color:#fff;
-    background:linear-gradient(180deg,#113a86 0%, #0b2663 100%);
+    background:linear-gradient(180deg,#18348c 0%, #10296b 100%);
     border:2px solid var(--line); border-radius:20px; box-shadow:0 14px 28px rgba(0,0,0,.35)}
-  /* ====== اختيارات “أجنحة” مثل البرنامج ====== */
   .grid{display:grid; grid-template-columns:1fr; gap:14px}
   @media (min-width:680px){ .grid{grid-template-columns:1fr 1fr} }
   .wing{
-    --c:#1b49a7;
     position:relative; overflow:hidden; cursor:pointer; border:none; color:#e8f3ff;
-    background:linear-gradient(180deg,#113a86,#0b2663);
+    background:linear-gradient(180deg,#18348c,#10296b);
     border:2px solid var(--line); padding:14px 20px; font-weight:900; font-size:clamp(15px,1.8vw,18px);
-    border-radius:999px; text-align:center; box-shadow:0 0 0 2px rgba(62,163,255,.22) inset, 0 10px 24px rgba(0,0,0,.28);
+    border-radius:999px; text-align:center; box-shadow:0 0 0 2px rgba(123,157,255,.22) inset, 0 10px 24px rgba(0,0,0,.28);
   }
   .wing::before,.wing::after{
-    content:""; position:absolute; top:0; bottom:0; width:20%; background:linear-gradient(180deg,#154189,#0e2f6b);
+    content:""; position:absolute; top:0; bottom:0; width:20%; background:linear-gradient(180deg,#15307c,#0f245f);
     border:inherit; transform:skewX(35deg); box-shadow:inherit
   }
   .wing::before{ right:100%; border-right:none; border-radius:20px 0 0 20px }
@@ -74,17 +79,24 @@
   .correct{border-color:var(--ok)!important; background:linear-gradient(180deg,#0b6c4c,#0a3f2f)!important}
   .wrong{border-color:var(--bad)!important; background:linear-gradient(180deg,#7a0d0d,#430707)!important}
 
-  /* سلم الأسئلة */
   .ladder{margin-top:16px; display:grid; grid-template-columns:repeat(10,1fr); gap:6px}
-  .step{border:1px solid #2e5fb6; border-radius:999px; padding:6px 0; font-size:12px; text-align:center; opacity:.6}
-  .active{background:#1b49a7; color:#fff; opacity:1; border-color:#7fc4ff}
+  .step{border:1px solid #4b70e6; border-radius:999px; padding:6px 0; font-size:12px; text-align:center; opacity:.6}
+  .active{background:#254ad9; color:#fff; opacity:1; border-color:#9fb4ff}
   .prize{color:#ffd66b; border-color:#ffd66b; font-weight:900; opacity:1}
 
   /* مودال */
-  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(2,8,24,.65); backdrop-filter:blur(2px); z-index:20}
-  .card{background:#0c1f4a; border:2px solid #5aa9ff; border-radius:18px; padding:22px; width:min(520px,92%); text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.6)}
-  .cta{background:linear-gradient(180deg,#1b77ff,#1256c7); color:#fff; font-weight:900; border:none; padding:10px 16px; border-radius:12px; cursor:pointer}
+  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(4,8,26,.65); backdrop-filter:blur(2px); z-index:20}
+  .card{background:#0d1a4c; border:2px solid #7b9dff; border-radius:18px; padding:22px; width:min(520px,92%); text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .cta{background:linear-gradient(180deg,#2a84ff,#1a5bd4); color:#fff; font-weight:900; border:none; padding:10px 16px; border-radius:12px; cursor:pointer}
   .muted{opacity:.5}
+
+  /* شريط سفلي */
+  .ribbon{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:10px; z-index:30; color:#fff; font-weight:900; letter-spacing:.3px;
+    background:linear-gradient(90deg,#7b27ff,#2bd9ff); border:2px solid #a2c0ff;
+    padding:8px 16px; border-radius:999px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
 </style>
 </head>
 <body>
@@ -101,19 +113,23 @@
     <div class="tools">
       <button id="fifty" class="pill">50:50</button>
       <button id="aud" class="pill">رأي الجمهور</button>
+      <button id="swap" class="pill">تغيير السؤال</button>
       <button id="mute" class="pill">كتم/تشغيل</button>
       <div class="badge">السؤال: <b id="qNo">1</b>/<b id="qTotal">70</b></div>
-      <div class="badge">الوقت: <b id="t">5</b>ث</div>
+      <div class="badge">الوقت: <b id="t">30</b>ث</div>
     </div>
   </div>
 
   <div class="stage">
+    <div class="glow"></div><div class="glow2"></div>
     <div id="bar" class="timerBar"></div>
     <div id="q" class="q">…</div>
     <div id="ans" class="grid"></div>
     <div id="ladder" class="ladder"></div>
   </div>
 </div>
+
+<div class="ribbon">💥 العب واكسب توصيله مجاني</div>
 
 <div id="pop" class="modal">
   <div class="card">
@@ -125,7 +141,7 @@
 <script>
 /* ================= إعدادات ================= */
 const WHATSAPP_PHONE = "201234567890"; // ← غيّر رقم واتساب (دولي بدون +)
-const QUESTION_TIME  = 5; // ثواني
+const QUESTION_TIME  = 30; // ثواني
 const FINAL_TARGET   = 70;
 
 const Q = [
@@ -208,12 +224,12 @@ const qNo=document.getElementById('qNo'), qTot=document.getElementById('qTotal')
 const bar=document.getElementById('bar'), tEl=document.getElementById('t');
 const ladder=document.getElementById('ladder'), pop=document.getElementById('pop');
 const msg=document.getElementById('msg'), again=document.getElementById('again');
-const fifty=document.getElementById('fifty'), aud=document.getElementById('aud'), mute=document.getElementById('mute');
+const fifty=document.getElementById('fifty'), aud=document.getElementById('aud'), swap=document.getElementById('swap'), mute=document.getElementById('mute');
 const bgm=document.getElementById('bgm'), clk=document.getElementById('clk'), ok=document.getElementById('ok'), bad=document.getElementById('bad');
 
 qTot.textContent=FINAL_TARGET;
 
-let idx=0, correctAt=0, timer=null, run=false, usedFifty=false, usedAud=false, muted=false;
+let idx=0, correctAt=0, timer=null, run=false, usedFifty=false, usedAud=false, usedSwap=false, muted=false;
 
 function play(a){ if(!muted){ try{a.currentTime=0; a.play()}catch(e){} } }
 function waSend(txt){ const url=`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(txt)}`; window.open(url,'_blank'); }
@@ -282,12 +298,16 @@ function choose(i){
 function popMsg(t){ msg.innerHTML=t; pop.style.display='grid'; }
 function fail(){ popMsg("❌ إجابة خاطئة أو انتهى الوقت.<br>ستبدأ من <b>السؤال 1</b>."); }
 
-again.onclick=()=>{ pop.style.display='none'; idx=0; usedFifty=false; usedAud=false; fifty.disabled=false; aud.disabled=false; render(); };
+again.onclick=()=>{ pop.style.display='none'; idx=0; usedFifty=false; usedAud=false; usedSwap=false; fifty.disabled=false; aud.disabled=false; swap.disabled=false; render(); };
 
+/* وسائل المساعدة */
 fifty.onclick=()=>{
   if(usedFifty) return; usedFifty=true; fifty.disabled=true;
-  const btns=[...ansEl.children]; let r=0;
-  for(let i=0;i<btns.length;i++){ if(i!==correctAt && r<2){ btns[i].disabled=true; btns[i].style.opacity=.35; r++; } }
+  const btns=[...ansEl.children];
+  let removed=0;
+  for(let i=0;i<btns.length;i++){
+    if(i!==correctAt && removed<2){ btns[i].disabled=true; btns[i].style.opacity=.35; removed++; }
+  }
 };
 aud.onclick=()=>{
   if(usedAud) return; usedAud=true; aud.disabled=true;
@@ -307,6 +327,11 @@ aud.onclick=()=>{
   </div>`;
   document.body.appendChild(overlay);
   document.getElementById('okpoll').onclick=()=>overlay.remove();
+};
+swap.onclick=()=>{
+  if(usedSwap) return; usedSwap=true; swap.disabled=true;
+  // تخطي السؤال الحالي بدون خسارة
+  stop(); idx++; if(idx>=FINAL_TARGET){ idx=FINAL_TARGET-1; } render();
 };
 mute.onclick=()=>{ muted=!muted; if(muted) bgm.pause(); else bgm.play().catch(()=>{}); mute.classList.toggle('muted',muted); };
 
