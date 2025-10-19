@@ -3,426 +3,419 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>اختبار عام — أسئلة وأجوبة</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<title>تحدّي الأسئلة - RPG</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0f172a; --card:#0b1024; --text:#e5eef7; --muted:#93a3b8;
-  --primary:#1cc09b; --accent:#22c55e; --wrong:#ef4444; --right:#22c55e; --brand:#33654F;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:radial-gradient(1200px 600px at 70% -10%,#122044 0%,#0b1229 40%,#061024 100%);
-  color:var(--text); font-family:'Cairo',system-ui,-apple-system,Segoe UI,Roboto,Arial; min-height:100svh;
-  display:flex; align-items:center; justify-content:center; padding:20px;
-}
-.container{
-  width:min(960px,100%); background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08); border-radius:20px; backdrop-filter: blur(8px);
-  box-shadow:0 20px 60px rgba(0,0,0,.45); overflow:hidden;
-}
-.header{
-  display:flex; align-items:center; justify-content:space-between; gap:10px; padding:18px 20px;
-  background:linear-gradient(90deg,var(--brand),#1f9d7d 60%,#22c55e); color:#fff;
-}
-.title{font-size:clamp(18px,2.8vw,26px); font-weight:800; letter-spacing:.4px}
-.badges{display:flex; gap:10px; flex-wrap:wrap}
-.badge{
-  display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px;
-  background:rgba(255,255,255,.18); font-weight:700; font-size:13px
-}
-.main{padding:20px}
-.card{
-  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
-  border-radius:16px; padding:16px; margin-bottom:14px;
-}
-.controls{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-.controls .row{display:flex; gap:10px; flex-wrap:wrap}
-select, input, button{
-  width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.16);
-  background:rgba(255,255,255,.06); color:var(--text); outline:none
-}
-button{cursor:pointer; font-weight:800; letter-spacing:.3px}
-.btn-primary{background:linear-gradient(90deg,var(--brand),#16a085); border:none}
-.btn-ghost{background:transparent; border:1px dashed rgba(255,255,255,.25)}
-.info{display:flex; gap:10px; flex-wrap:wrap; align-items:center; color:var(--muted); font-size:14px}
-.progress{height:10px; background:rgba(255,255,255,.1); border-radius:999px; overflow:hidden}
-.progress > i{display:block; height:100%; background:linear-gradient(90deg,#22c55e,#10b981); width:0%}
-.q{
-  font-weight:700; font-size:clamp(18px,2.6vw,22px); line-height:1.6; margin-bottom:10px
-}
-.meta{display:flex; gap:8px; color:var(--muted); font-size:13px; flex-wrap:wrap}
-.options{display:grid; gap:10px; margin-top:10px}
-.opt{
-  display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.03); cursor:pointer; position:relative;
-}
-.opt:hover{border-color:rgba(255,255,255,.28); background:rgba(255,255,255,.06)}
-.opt.correct{border-color:rgba(34,197,94,.6); background:rgba(34,197,94,.15)}
-.opt.wrong{border-color:rgba(239,68,68,.6); background:rgba(239,68,68,.15)}
-.actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
-.footer{padding:16px 20px; background:rgba(255,255,255,.04); border-top:1px solid rgba(255,255,255,.06)}
-.center{display:flex; align-items:center; justify-content:center}
-.small{font-size:12px; color:var(--muted)}
-.kpi{display:flex; gap:10px; flex-wrap:wrap}
-.kpi .item{background:rgba(255,255,255,.06); padding:10px 12px; border-radius:12px; font-weight:700}
-.final{ text-align:center; padding:30px 10px}
-.final h2{margin:0 0 6px; font-size:clamp(20px,3vw,28px)}
-.final p{color:var(--muted)}
-hr{border:none; border-top:1px dashed rgba(255,255,255,.15); margin:14px 0}
-@media (max-width:640px){
-  .controls{grid-template-columns:1fr}
-}
+  :root{
+    --bg:#0b1324;
+    --panel:#111b34;
+    --accent:#2dd4bf;
+    --accent2:#22c55e;
+    --danger:#ef4444;
+    --warning:#f59e0b;
+    --text:#e5f0ff;
+    --muted:#94a3b8;
+    --brand:#33654F;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:
+      radial-gradient(1200px 500px at 50% -200px, #183058 0%, #0f1c37 55%, var(--bg) 100%);
+    color:var(--text); font-family:'Cairo',system-ui; min-height:100dvh;
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .game{
+    width:min(980px,100%); background:linear-gradient(180deg,#0f1c37 0%,var(--panel) 100%);
+    border:1px solid #1f2a44; border-radius:20px; overflow:hidden; position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .hud{
+    display:flex; gap:12px; padding:14px 16px; flex-wrap:wrap;
+    background:linear-gradient(90deg,rgba(51,101,79,.35),rgba(45,212,191,.15));
+    align-items:center; justify-content:space-between;
+  }
+  .stat{display:flex; gap:8px; align-items:center; padding:.35rem .65rem;
+    background:#0d1730; border:1px solid #203054; border-radius:12px; color:var(--text)}
+  .brand{font-weight:700; letter-spacing:.3px; display:flex; align-items:center; gap:8px}
+  .brand em{font-style:normal; color:var(--accent)}
+  .rpg{
+    position:relative; height:160px; background:
+      linear-gradient(#0e1a33 0,#0e1a33 70%, #071021 70%, #071021 100%);
+    border-top:1px solid #1e2b4e; border-bottom:1px solid #1e2b4e;
+    overflow:hidden;
+  }
+  .rpg .ground{position:absolute; inset:auto 0 0 0; height:54px;
+    background:
+      repeating-linear-gradient(90deg, #19325d 0 18px, #14294e 18px 36px);
+    box-shadow:0 -8px 0 rgba(0,0,0,.25) inset;
+  }
+  .rpg .hero{position:absolute; bottom:54px; right:22px; width:46px; height:46px;
+    background:radial-gradient(#34d399 30%,#10b981 65%,#059669 100%);
+    border:2px solid #0ea5a5; border-radius:12px; box-shadow:0 6px 20px rgba(16,185,129,.35)}
+  .rpg .coin{position:absolute; bottom:96px; right:86px; width:12px; height:12px;
+    border-radius:50%; background:radial-gradient(#fde68a,#f59e0b); box-shadow:0 0 10px #f59e0b;}
+  .card{padding:18px 16px 22px}
+  .question{font-size:1.25rem; line-height:1.6; font-weight:700; margin:6px 0 14px}
+  .answers{display:grid; gap:10px}
+  .answers button{
+    text-align:right; padding:12px 14px; border-radius:14px; border:1px solid #1f2a44;
+    background:#0e1a33; color:var(--text); cursor:pointer; font-weight:700;
+    transition:.2s ease; position:relative; isolation:isolate;
+  }
+  .answers button:hover{transform:translateY(-1px); box-shadow:0 8px 16px rgba(0,0,0,.25)}
+  .answers button.correct{background:linear-gradient(90deg,#0e1a33, rgba(34,197,94,.25));
+    border-color:#14532d; outline:2px solid rgba(34,197,94,.35)}
+  .answers button.wrong{background:linear-gradient(90deg,#0e1a33, rgba(239,68,68,.22));
+    border-color:#7f1d1d; outline:2px solid rgba(239,68,68,.35)}
+  .timerTrack{height:8px; background:#0d1730; border:1px solid #203054; border-radius:999px; overflow:hidden}
+  .timerBar{height:100%; width:100%; background:linear-gradient(90deg,var(--accent),#22c55e);
+    transform-origin:right center; transition:width .1s linear}
+  .toolbar{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+  .tool{
+    padding:.45rem .7rem; border:1px dashed #2a3d6f; border-radius:12px; background:#0e1a33;
+    color:#bcd3ff; font-weight:700; cursor:not-allowed; opacity:.55
+  }
+  .tool.enabled{cursor:pointer; opacity:1; border-style:solid}
+  .tool.used{opacity:.35; text-decoration:line-through}
+  .foot{
+    display:flex; justify-content:space-between; align-items:center; padding:12px 16px;
+    border-top:1px solid #1f2a44; color:var(--muted); font-weight:700
+  }
+  .msg{padding:12px 14px; border-radius:12px; background:#0d1730; border:1px solid #203054; margin-top:12px}
+  .cta{display:inline-flex; gap:10px; align-items:center; padding:10px 14px; border-radius:12px;
+    background:linear-gradient(90deg,#22c55e,#2dd4bf); color:#062415; font-weight:900; border:0; cursor:pointer}
+  .overlay{
+    position:fixed; inset:0; background:rgba(4,9,20,.72); display:none; align-items:center; justify-content:center; z-index:30
+  }
+  .modal{
+    width:min(520px,92%); background:linear-gradient(180deg,#0f1c37,#0e1a33); border:1px solid #1f2a44;
+    color:var(--text); border-radius:16px; padding:18px 16px; box-shadow:0 40px 80px rgba(0,0,0,.45)
+  }
+  .audienceBars{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px}
+  .bar{background:#0d1730; border:1px solid #203054; height:120px; border-radius:10px; position:relative; overflow:hidden}
+  .bar span{position:absolute; inset:auto 0 0 0; background:linear-gradient(#22c55e,#2dd4bf); width:100%}
+  .bar em{position:absolute; top:6px; left:0; right:0; text-align:center; font-style:normal; color:#a5b4fc; font-weight:700}
+  .small{font-size:.9rem; color:#9fb0d9}
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="title">اختبار عام — أسئلة وأجوبة</div>
-      <div class="badges">
-        <div class="badge">🎯 <span id="score">0</span> نقطة</div>
-        <div class="badge">🏆 أفضل نتيجة: <span id="best">0</span></div>
-      </div>
-    </div>
 
-    <div class="main">
-      <!-- إعدادات البداية -->
-      <div class="card" id="setup">
-        <div class="controls">
-          <div class="row">
-            <label style="width:100%">
-              الفئة
-              <select id="category">
-                <option value="all">كل الفئات</option>
-                <option value="ديني">ديني</option>
-                <option value="تاريخي">تاريخي</option>
-                <option value="ثقافي">ثقافي</option>
-                <option value="منوعات">منوعات</option>
-              </select>
-            </label>
-          </div>
-          <div class="row">
-            <label style="flex:1">
-              عدد الأسئلة في الجلسة
-              <select id="count">
-                <option>10</option>
-                <option selected>15</option>
-                <option>20</option>
-                <option>30</option>
-                <option value="all">كل المتاح</option>
-              </select>
-            </label>
-            <label style="flex:1">
-              ترتيب
-              <select id="order">
-                <option value="random" selected>عشوائي</option>
-                <option value="fixed">كما في القاعدة</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn-primary" id="startBtn">ابدأ الآن</button>
-          <button class="btn-ghost" id="howBtn">طريقة اللعب</button>
-        </div>
-        <p class="small">الأسئلة مأخوذة من معلومات عامة (ديني، تاريخي، ثقافي، منوعات) — مُهيأة للجوال والكمبيوتر.</p>
-      </div>
-
-      <!-- منطقة السؤال -->
-      <div class="card" id="stage" style="display:none">
-        <div class="info">
-          <div>السؤال <b id="idx">1</b>/<span id="total">0</span></div>
-          <div>الفئة: <b id="cat">—</b></div>
-        </div>
-        <div class="progress" aria-hidden="true"><i id="bar"></i></div>
-        <div class="q" id="q">...</div>
-        <div class="meta" id="meta"></div>
-        <div class="options" id="options"></div>
-        <div class="actions">
-          <button class="btn-primary" id="nextBtn" disabled>السؤال التالي ↩︎</button>
-          <button class="btn-ghost" id="skipBtn">تخطي</button>
-        </div>
-      </div>
-
-      <!-- النتيجة -->
-      <div class="card" id="result" style="display:none">
-        <div class="final">
-          <h2>انتهت الجلسة! 🎉</h2>
-          <p>نتيجتك: <b id="finalScore">0</b> من <b id="finalTotal">0</b></p>
-          <div class="kpi center" style="justify-content:center;margin:10px 0">
-            <div class="item">✅ صحيحة: <span id="ok">0</span></div>
-            <div class="item">❌ خاطئة: <span id="ko">0</span></div>
-            <div class="item">⏭️ متخطاة: <span id="sk">0</span></div>
-          </div>
-          <hr>
-          <div class="actions center" style="justify-content:center">
-            <button class="btn-primary" id="restart">أعد المحاولة</button>
-            <button class="btn-ghost" onclick="shareScore()">مشاركة النتيجة</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer small">
-      ملاحظة: يتم حفظ أفضل نتيجة على جهازك فقط.
+<div class="game" id="game">
+  <div class="hud">
+    <div class="brand">⚔️ <em>RPG</em> تحدّي الأسئلة</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div class="stat">السؤال: <b id="qNum">1</b> / <b id="qTotal">100</b></div>
+      <div class="stat">النتيجة: <b id="score">0</b></div>
+      <div class="stat">الوقت: <b id="timeLeft">5</b> ث</div>
     </div>
   </div>
 
+  <div class="rpg">
+    <div class="hero" id="hero"></div>
+    <div class="coin"></div>
+    <div class="ground"></div>
+  </div>
+
+  <div class="card">
+    <div class="timerTrack"><div class="timerBar" id="timerBar"></div></div>
+
+    <div class="question" id="question">…</div>
+
+    <div class="answers" id="answers"></div>
+
+    <div class="toolbar">
+      <button class="tool" id="fiftyTool" disabled>🧩 حذف إجابتين (بعد 20)</button>
+      <button class="tool" id="audTool" disabled>📊 رأي الجمهور (بعد 40)</button>
+    </div>
+
+    <div class="msg small" id="statusMsg">أجب على 50 سؤالًا لتحصل على توصيلـة مجانية 🚚</div>
+  </div>
+
+  <div class="foot">
+    <div>🎵 موسيقى خفيفة تعمل تلقائيًا — يمكنك كتمها من إعدادات المتصفح.</div>
+    <div class="stat">مساعدات: <b id="helpers">0</b></div>
+  </div>
+</div>
+
+<!-- Overlay: Audience Poll / Congratulation -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- أصوات -->
+<audio id="bgm" loop>
+  <source src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA" type="audio/mp3">
+</audio>
+
 <script>
-/** ===========================
- *  قاعدة الأسئلة (100 سؤال)
- *  الحقول: q السؤال، options الاختيارات (4)، a رقم الإجابة الصحيحة (0..3)، cat الفئة
- *  =========================== */
-const QUESTIONS = [
-  // ===== ديني (25) =====
-  {q:"ما أول ما يُحاسَب عليه العبد يوم القيامة؟",options:["الزكاة","الصلاة","الصوم","الحج"],a:1,cat:"ديني"},
-  {q:"كم عدد ركعات صلاة الفجر (الفرض)؟",options:["ركعتان","ثلاث","أربع","خمس"],a:0,cat:"ديني"},
-  {q:"في أي شهر فُرض صيام رمضان؟",options:["شعبان","رمضان","رجب","محرم"],a:0,cat:"ديني"},
-  {q:"ما هي السورة التي تُسمى قلب القرآن؟",options:["يس","الرحمن","الفاتحة","الكهف"],a:0,cat:"ديني"},
-  {q:"من هو خاتم الأنبياء؟",options:["إبراهيم","عيسى","محمد","موسى"],a:2,cat:"ديني"},
-  {q:"أركان الإسلام عددها:",options:["ثلاثة","أربعة","خمسة","ستة"],a:2,cat:"ديني"},
-  {q:"الغار الذي اختبأ فيه النبي ﷺ وأبو بكر:",options:["غار ثور","غار حراء","غار أحد","غار مني"],a:0,cat:"ديني"},
-  {q:"أطول سورة في القرآن:",options:["البقرة","النساء","آل عمران","المائدة"],a:0,cat:"ديني"},
-  {q:"ليلة القدر في العشر الأواخر من:",options:["محرم","رمضان","شعبان","ذي الحجة"],a:1,cat:"ديني"},
-  {q:"عدد السجدات في القرآن:",options:["10","12","14","15"],a:2,cat:"ديني"},
-  {q:"أول مسجد بُني في الإسلام:",options:["المسجد النبوي","المسجد الحرام","قباء","الأقصى"],a:2,cat:"ديني"},
-  {q:"الزكاة ركن…",options:["إيمان","إحسان","إسلام","تقوى"],a:2,cat:"ديني"},
-  {q:"نبي ابتُلِي بالمرض وصبر:",options:["أيوب","يونس","داود","سليمان"],a:0,cat:"ديني"},
-  {q:"عدد الأشهر الحُرم:",options:["٢","٣","٤","٥"],a:2,cat:"ديني"},
-  {q:"أقصر سورة في القرآن:",options:["الكوثر","الإخلاص","العصر","النصر"],a:0,cat:"ديني"},
-  {q:"أُمُّ المؤمنين التي لُقِّبت بالصِّدِّيقة:",options:["حفصة","عائشة","أم سلمة","سودة"],a:1,cat:"ديني"},
-  {q:"سورة تُسمى عروس القرآن:",options:["يوسف","الرحمن","مريم","الملك"],a:1,cat:"ديني"},
-  {q:"صلاة الخوف شُرعت في:",options:["السفر فقط","الحرب","المرض","الجمعة"],a:1,cat:"ديني"},
-  {q:"ما هو ركن الحج الأعظم؟",options:["الطواف","السعي","الوقوف بعرفة","رمي الجمرات"],a:2,cat:"ديني"},
-  {q:"كم عدد التكبيرات في صلاة العيد (الأولى قبل القراءة)؟",options:["3","5","7","9"],a:2,cat:"ديني"},
-  {q:"أول من أسلم من الصبيان:",options:["علي بن أبي طالب","الزبير","أنس","أسامة"],a:0,cat:"ديني"},
-  {q:"السورة التي تبدأ بـ(الحمد لله رب العالمين):",options:["الفاتحة","الأنعام","سبأ","فاطر"],a:0,cat:"ديني"},
-  {q:"الأذان شُرع في عهد:",options:["مكة","المدينة","الطائف","الحديبية"],a:1,cat:"ديني"},
-  {q:"السنة المؤكدة قبل الفجر:",options:["لا شيء","ركعة","ركعتان","أربع"],a:2,cat:"ديني"},
-  {q:"من هو ذو النون؟",options:["إدريس","يونس","يوسف","يعقوب"],a:1,cat:"ديني"},
+/* ============ البيانات ============ */
 
-  // ===== تاريخي (25) =====
-  {q:"من هو القائد المسلم في معركة اليرموك؟",options:["عمرو بن العاص","خالد بن الوليد","أبو عبيدة","سعد بن أبي وقاص"],a:1,cat:"تاريخي"},
-  {q:"في أي عام سقطت الدولة الأموية؟",options:["750م","661م","632م","800م"],a:0,cat:"تاريخي"},
-  {q:"من أول خليفة عباسي؟",options:["المنصور","السفاح","المهدي","الهادي"],a:1,cat:"تاريخي"},
-  {q:"فتح القسطنطينية كان على يد:",options:["محمد الفاتح","صلاح الدين","نور الدين","قطز"],a:0,cat:"تاريخي"},
-  {q:"من قائد معركة حطين؟",options:["قطز","صلاح الدين الأيوبي","بيبرس","طارق بن زياد"],a:1,cat:"تاريخي"},
-  {q:"طارق بن زياد فتح:",options:["مصر","الأندلس","اليمن","بلاد السند"],a:1,cat:"تاريخي"},
-  {q:"الدولة التي وحّدت شبه الجزيرة العربية الحديثة:",options:["العثمانية","الأيوبية","السعودية","الزنكية"],a:2,cat:"تاريخي"},
-  {q:"الحضارة التي شيدت الأهرامات:",options:["الآشورية","الفينيقية","المصرية القديمة","الإغريقية"],a:2,cat:"تاريخي"},
-  {q:"اندلعت الحرب العالمية الأولى عام:",options:["1914","1918","1939","1945"],a:0,cat:"تاريخي"},
-  {q:"الحرب العالمية الثانية انتهت عام:",options:["1940","1943","1945","1950"],a:2,cat:"تاريخي"},
-  {q:"أول رئيس لمصر بعد ثورة 1952:",options:["السادات","عبدالناصر","محمد نجيب","مبارك"],a:2,cat:"تاريخي"},
-  {q:"من اكتشف قانون الجاذبية؟",options:["غاليلو","نيوتن","كوبرنيكوس","بلانك"],a:1,cat:"تاريخي"},
-  {q:"مدينة البتراء تقع في:",options:["سوريا","الأردن","مصر","العراق"],a:1,cat:"تاريخي"},
-  {q:"من بنى حدائق بابل المعلقة؟",options:["نبوخذنصر","حمورابي","سارغون","آشور بانيبال"],a:0,cat:"تاريخي"},
-  {q:"القائد الذي هزم المغول في عين جالوت:",options:["بيبرس","قطز","أرطغرل","محمد الفاتح"],a:1,cat:"تاريخي"},
-  {q:"من هو الرحالة المغربي الشهير؟",options:["ابن بطوطة","ابن جبير","المقدسي","ياقوت"],a:0,cat:"تاريخي"},
-  {q:"دولة سبأ ازدهرت في:",options:["بلاد الشام","بلاد الرافدين","اليمن","مصر"],a:2,cat:"تاريخي"},
-  {q:"عاصمة الدولة العباسية الأولى:",options:["بغداد","الكوفة","الأنبار","سامراء"],a:0,cat:"تاريخي"},
-  {q:"صلاح الدين حارب:",options:["المغول","التتار","الصليبيين","البيزنطيين"],a:2,cat:"تاريخي"},
-  {q:"من هو أول من لقب بأمير المؤمنين؟",options:["عمر","عثمان","علي","معاوية"],a:0,cat:"تاريخي"},
-  {q:"اتحدت ألمانيا الحديثة في القرن:",options:["الثامن عشر","التاسع عشر","العشرين","السابع عشر"],a:1,cat:"تاريخي"},
-  {q:"معركة بدر وقعت في السنة:",options:["الثانية للهجرة","الأولى","الثالثة","الخامسة"],a:0,cat:"تاريخي"},
-  {q:"من هو باني مدينة بغداد؟",options:["المعتصم","المنصور","المأمون","هارون الرشيد"],a:1,cat:"تاريخي"},
-  {q:"قناة السويس افتُتحت عام:",options:["1869","1914","1882","1967"],a:0,cat:"تاريخي"},
-  {q:"غرناطة سقطت سنة:",options:["1492","1453","1517","1200"],a:0,cat:"تاريخي"},
+/* ضع رقم واتساب بتاعك هنا (كود الدولة بدون +) */
+const WHATSAPP_PHONE = "201234567890"; // مثال: 2010xxxxxxx
 
-  // ===== ثقافي (25) =====
-  {q:"كاتب رواية «البؤساء»:",options:["تولستوي","فيكتور هوغو","ديكنز","زولا"],a:1,cat:"ثقافي"},
-  {q:"مؤلف «موسوعة ويكيبيديا» يُعد مثالًا على:",options:["الناشر التقليدي","المحتوى المفتوح","المدونات","الكتب الصوتية"],a:1,cat:"ثقافي"},
-  {q:"كم عدد أحرف اللغة العربية؟",options:["28","29","30","27"],a:0,cat:"ثقافي"},
-  {q:"عاصمة اليابان:",options:["أوساكا","سنداي","طوكيو","كيوتو"],a:2,cat:"ثقافي"},
-  {q:"الكِمْياء تُنسب إلى:",options:["الخوارزمي","جابر بن حيان","الرازي","ابن سينا"],a:1,cat:"ثقافي"},
-  {q:"وحدة قياس شدة الصوت:",options:["وات","ديسيبل","هيرتز","أوم"],a:1,cat:"ثقافي"},
-  {q:"مخترع المصباح الكهربائي:",options:["تسلا","إديسون","فاراداي","مورس"],a:1,cat:"ثقافي"},
-  {q:"أكبر كوكب في مجموعتنا الشمسية:",options:["زحل","المشتري","الأرض","نبتون"],a:1,cat:"ثقافي"},
-  {q:"اللغة الرسمية في البرازيل:",options:["الإسبانية","البرتغالية","الإنجليزية","الهولندية"],a:1,cat:"ثقافي"},
-  {q:"عدد قارات العالم:",options:["5","6","7","8"],a:2,cat:"ثقافي"},
-  {q:"أديب نوبل المصري:",options:["طه حسين","العقاد","نجيب محفوظ","يوسف إدريس"],a:2,cat:"ثقافي"},
-  {q:"أسرع حيوان بري:",options:["الغزال","الفهد","الحصان","الذئب"],a:1,cat:"ثقافي"},
-  {q:"جهاز قياس الزلازل:",options:["بارومتر","مرصد ضوئي","سيسموغراف","غلايكومتر"],a:2,cat:"ثقافي"},
-  {q:"أصغر عظمة في جسم الإنسان:",options:["الرّكاب","الأنف","عظم الرسغ","الترقوة"],a:0,cat:"ثقافي"},
-  {q:"الغاز الأكثر وفرة في الهواء:",options:["أكسجين","نيتروجين","أرجون","ثاني أكسيد الكربون"],a:1,cat:"ثقافي"},
-  {q:"الخط الذي يُكتب به المصحف غالبًا:",options:["الديواني","النسخ","الثلث","الرقعة"],a:1,cat:"ثقافي"},
-  {q:"عدد أضلاع المثلث:",options:["2","3","4","5"],a:1,cat:"ثقافي"},
-  {q:"الكوكب الأحمر:",options:["الزهرة","عطارد","المريخ","زحل"],a:2,cat:"ثقافي"},
-  {q:"أبو الطب:",options:["ابن سينا","الرازي","أبقراط","ابن النفيس"],a:2,cat:"ثقافي"},
-  {q:"مقياس الحرارة المئوي يُسمى:",options:["كلفن","فهرنهايت","سيليسيوس","نيوتن"],a:2,cat:"ثقافي"},
-  {q:"مؤلف «البيان والتبيين»:",options:["الحريري","الجاحظ","ابن خلدون","سيبويه"],a:1,cat:"ثقافي"},
-  {q:"مكتشف الدورة الدموية الصغرى:",options:["ابن سينا","ابن النفيس","الرازي","أبقراط"],a:1,cat:"ثقافي"},
-  {q:"الوتَر في الموسيقى هو:",options:["إيقاع","آلة نفخ","آلة وترية","طبلة"],a:2,cat:"ثقافي"},
-  {q:"لون الشاخصة التحذيرية في الطرق (غالبًا):",options:["أحمر/أبيض","أصفر/أسود","أزرق/أبيض","أخضر/أبيض"],a:1,cat:"ثقافي"},
-  {q:"السيمفونية فن مرتبط بـ:",options:["الرسم","الموسيقى","الشعر","الرقص"],a:1,cat:"ثقافي"},
+/* ألصق هنا قائمة الـ 100 سؤال (نص + 4 اختيارات + رقم الصحيحة) */
+const questions = [
+  // مثال للشكل:
+  { q: "ما العاصمة الإدارية لدولة مصر قديمًا في عهد مينا موحِّد القطرين؟", a: ["طيبة","منف","أهناسيا","أواريس"], correct: 1 },
+  { q: "أول خُطا الإسلام في الحبشة كانت في عهد من؟", a: ["عمر","عثمان","النبي ﷺ","أبو بكر"], correct: 2 },
+  { q: "أطول نهر في العالم؟", a: ["الأمازون","النيجر","النيل","الدانوب"], correct: 2 },
+  { q: "عِلم يهتم بدراسة الأديان والمعتقدات؟", a: ["اللاهوت المقارن","المسكوكات","الأنثروبولوجيا","الجغرافيا"], correct: 0 },
+  { q: "غزوة وقعت في العام الثاني للهجرة؟", a: ["الخندق","بدر","أحد","حنين"], correct: 1 },
+  { q: "مؤلف «نهج البلاغة» جامعًا؟", a: ["الشريف الرضي","الطبري","ابن كثير","الجاحظ"], correct: 0 },
+  { q: "عدد الخلفاء الراشدين؟", a: ["ثلاثة","أربعة","خمسة","ستة"], correct: 1 },
+  { q: "الكوكب الأحمر؟", a: ["الزهرة","عطارد","المريخ","نبتون"], correct: 2 },
 
-  // ===== منوعات (25) =====
-  {q:"عملة المملكة المتحدة:",options:["يورو","جنيه إسترليني","دولار","فرنك"],a:1,cat:"منوعات"},
-  {q:"أطول نهر في العالم (وفق قياسات حديثة غالبًا):",options:["الأمازون","النيـل","اليانغتسي","الكونغو"],a:1,cat:"منوعات"},
-  {q:"بحر يربط آسيا بأوروبا:",options:["العربي","الأسود","قزوين","الكرسي"],a:1,cat:"منوعات"},
-  {q:"أكبر محيط:",options:["الأطلسي","الهندي","الهادئ","المتجمد الشمالي"],a:2,cat:"منوعات"},
-  {q:"عدد البيكسلات بوحدة الميغابكسل يساوي:",options:["مليون بكسل","ألف بكسل","مليار بكسل","مئة ألف"],a:0,cat:"منوعات"},
-  {q:"لغة كبرى في الهند إلى جانب الهندية:",options:["أردية","بنغالية","تاميلية","بنجابية"],a:1,cat:"منوعات"},
-  {q:"المادة التي تعطي الدم لونه الأحمر:",options:["الهيموغلوبين","البلازما","الصفائح","اللمف"],a:0,cat:"منوعات"},
-  {q:"أكبر صحراء حارة:",options:["الجزيرة العربية","جوبي","الصحرا الكبرى","كالاهاري"],a:2,cat:"منوعات"},
-  {q:"أشهر برنامج جداول بيانات:",options:["وورد","أكسيس","إكسل","باوربوينت"],a:2,cat:"منوعات"},
-  {q:"أين تقع جزر المالديف؟",options:["المحيط الهندي","الهادئ","الأطلسي","المتجمد"],a:0,cat:"منوعات"},
-  {q:"عُملة اليابان:",options:["ون","يوان","ين","بات"],a:2,cat:"منوعات"},
-  {q:"أسرع شبكة اتصالات خلوية متاحة تجاريًا (حتى اليوم في أغلب الدول):",options:["3G","4G","5G","2G"],a:2,cat:"منوعات"},
-  {q:"الفيتامين المفيد للرؤية خاصةً:",options:["A","C","D","K"],a:0,cat:"منوعات"},
-  {q:"الحد الأقصى لقياس pH الحمضي يكون أقل من:",options:["7","6","8","9"],a:0,cat:"منوعات"},
-  {q:"عملية تحوّل الماء إلى بخار:",options:["تكاثف","تبخر","تسامي","ترسيب"],a:1,cat:"منوعات"},
-  {q:"عدد لاعبي فريق كرة السلة داخل الملعب:",options:["5","7","9","11"],a:0,cat:"منوعات"},
-  {q:"مسرحية «هاملت» من تأليف:",options:["شكسبير","دانتي","تشيخوف","موليير"],a:0,cat:"منوعات"},
-  {q:"أكبر حيوان على وجه الأرض:",options:["الحوت الأزرق","الفيل الإفريقي","الديناصور","الحوت الأحدب"],a:0,cat:"منوعات"},
-  {q:"مقر الاتحاد الأوروبي الرئيسي:",options:["روما","برلين","بروكسل","مدريد"],a:2,cat:"منوعات"},
-  {q:"الغاز المستخدم في بالونات الهيليوم:",options:["أكسجين","أرجون","هيليوم","نيتروجين"],a:2,cat:"منوعات"},
-  {q:"الرياضة الوطنية لليابان (شهيرة):",options:["جودو","سومو","كاراتيه","كونغ فو"],a:1,cat:"منوعات"},
-  {q:"تطبيق يُستخدم للمحادثات الفورية:",options:["فوتوشوب","إكسل","واتساب","إليستريتور"],a:2,cat:"منوعات"},
-  {q:"مدينة تُعرف بمدينة الضباب:",options:["باريس","لندن","أمستردام","فيينا"],a:1,cat:"منوعات"},
-  {q:"مقياس سرعة الرياح:",options:["أنيمومتر","بارومتر","هايدرومتر","أودومتر"],a:0,cat:"منوعات"},
-  {q:"الذهب يرمز له كيميائياً:",options:["Ag","Au","Fe","Pt"],a:1,cat:"منوعات"},
+  /* ===== الصق بقية الـ 100 سؤال هنا بنفس التنسيق ===== */
 ];
 
-/* =========================
-   منطق اللعبة
-   ========================= */
-const el = s => document.querySelector(s);
-const scoreEl = el('#score');
-const bestEl = el('#best');
-const idxEl = el('#idx');
-const totalEl = el('#total');
-const catEl = el('#cat');
-const qEl = el('#q');
-const optionsEl = el('#options');
-const barEl = el('#bar');
+/* ============ حالة اللعبة ============ */
+let idx = 0;               // رقم السؤال الحالي (0-based)
+let score = 0;             // عدد الإجابات الصحيحة
+let timer = null;          // المؤقّت
+let timeLeft = 5;          // ثواني للسؤال
+let usedFifty = false;     // هل استُخدم 50/50
+let usedAudience = false;  // هل استُخدم رأي الجمهور
+const TOTAL = questions.length || 100;
 
-const setup = el('#setup');
-const stage = el('#stage');
-const result = el('#result');
+/* ============ عناصر DOM ============ */
+const qNumEl = document.getElementById('qNum');
+const qTotalEl = document.getElementById('qTotal');
+const scoreEl = document.getElementById('score');
+const timeLeftEl = document.getElementById('timeLeft');
+const timerBar = document.getElementById('timerBar');
+const qEl = document.getElementById('question');
+const answersEl = document.getElementById('answers');
+const statusMsg = document.getElementById('statusMsg');
+const helpersEl = document.getElementById('helpers');
 
-const nextBtn = el('#nextBtn');
-const skipBtn = el('#skipBtn');
+const fiftyBtn = document.getElementById('fiftyTool');
+const audBtn = document.getElementById('audTool');
 
-let current = 0, score = 0, correct = 0, wrong = 0, skipped = 0;
-let deck = [];
+const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
 
-/* تحميل أفضل نتيجة */
-bestEl.textContent = localStorage.getItem('quizBest') || 0;
+/* ============ أصوات (كليك/صواب/خطأ) ============ */
+let audioCtx;
+function clickSound(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type="square"; o.frequency.value=880; g.gain.value=.04;
+    o.connect(g).connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(),100);
+  }catch(e){}
+}
+function rightSound(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type="sine"; o.frequency.setValueAtTime(520,audioCtx.currentTime);
+    o.frequency.linearRampToValueAtTime(880,audioCtx.currentTime+.2);
+    g.gain.value=.05; o.connect(g).connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(),220);
+  }catch(e){}
+}
+function wrongSound(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type="sawtooth"; o.frequency.value=140; g.gain.value=.06;
+    o.connect(g).connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(),180);
+  }catch(e){}
+}
 
-/* ابدأ */
-el('#startBtn').addEventListener('click', () => {
-  const cat = el('#category').value;
-  const order = el('#order').value;
-  let list = cat === 'all' ? [...QUESTIONS] : QUESTIONS.filter(x => x.cat === cat);
+/* ============ أدوات/مساعدات ============ */
+function updateToolsState(){
+  // 50/50 متاح بعد السؤال 20
+  if(idx+1 >= 20 && !usedFifty){
+    fiftyBtn.classList.add('enabled'); fiftyBtn.disabled=false;
+  }
+  // رأي الجمهور متاح بعد السؤال 40
+  if(idx+1 >= 40 && !usedAudience){
+    audBtn.classList.add('enabled'); audBtn.disabled=false;
+  }
+}
+fiftyBtn.addEventListener('click',()=>{
+  if(fiftyBtn.disabled) return;
+  clickSound();
+  usedFifty = true; fiftyBtn.classList.add('used'); fiftyBtn.disabled=true;
 
-  // ترتيب
-  if (order === 'random') list = shuffle(list);
-
-  // عدد
-  const selected = el('#count').value;
-  if (selected !== 'all') list = list.slice(0, Number(selected));
-
-  deck = list;
-  totalEl.textContent = deck.length;
-  current = 0; score = 0; correct = 0; wrong = 0; skipped = 0;
-  scoreEl.textContent = 0;
-
-  setup.style.display = 'none';
-  result.style.display = 'none';
-  stage.style.display = '';
-  render();
+  // اخفِ إجابتين خاطئتين عشوائيتين
+  const btns = [...answersEl.querySelectorAll('button')];
+  const correctIndex = +answersEl.dataset.correct;
+  const wrongs = btns.map((b,i)=>i).filter(i=>i!==correctIndex);
+  shuffle(wrongs).slice(0,2).forEach(i=>btns[i].disabled=true);
 });
 
-el('#howBtn').addEventListener('click', () => {
-  alert('اختر الفئة وعدد الأسئلة ثم اضغط "ابدأ الآن".\nاختر الإجابة الصحيحة من بين 4 اختيارات.\nيمكنك تخطي السؤال، وفي النهاية تُعرض نتيجتك وأفضل نتيجة محفوظة.');
+audBtn.addEventListener('click',()=>{
+  if(audBtn.disabled) return;
+  clickSound();
+  usedAudience = true; audBtn.classList.add('used'); audBtn.disabled=true;
+
+  const choices = [...answersEl.querySelectorAll('button')].map(b=>b.textContent.trim());
+  const correctIndex = +answersEl.dataset.correct;
+
+  // انسب توزيع بنسب مائلة للصحيح
+  const base = [15,20,25,40]; // مجموع 100
+  shuffle(base);
+  // اجعل الصحيح أعلى
+  const maxIdx = base.indexOf(Math.max(...base));
+  if(maxIdx !== correctIndex){
+    [base[maxIdx], base[correctIndex]] = [base[correctIndex], base[maxIdx]];
+  }
+
+  showAudience(choices, base);
 });
 
-nextBtn.addEventListener('click', () => {
-  current++;
-  if (current < deck.length) render();
-  else finish();
-  nextBtn.disabled = true;
-});
+function showAudience(labels, perc){
+  overlay.style.display='flex';
+  modal.innerHTML = `
+    <h3 style="margin:0 0 8px">📊 رأي الجمهور</h3>
+    <div class="small">هذه النسب للاستئناس فقط.</div>
+    <div class="audienceBars">
+      ${labels.map((lab,i)=>`
+        <div class="bar">
+          <em>${lab}</em>
+          <span style="height:${perc[i]}%"></span>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:12px;display:flex;justify-content:flex-end">
+      <button class="cta" onclick="document.getElementById('overlay').style.display='none'">حسنًا</button>
+    </div>
+  `;
+}
 
-skipBtn.addEventListener('click', () => {
-  skipped++; nextBtn.disabled = false;
-});
+/* ============ منطق المؤقّت ============ */
+function startTimer(){
+  stopTimer();
+  timeLeft = 5;
+  timeLeftEl.textContent = timeLeft;
+  timerBar.style.width = "100%";
+  const started = performance.now();
+  timer = setInterval(()=>{
+    const elapsed = (performance.now()-started)/1000;
+    const left = Math.max(0, 5 - elapsed);
+    timeLeftEl.textContent = left.toFixed(0);
+    timerBar.style.width = (left/5*100) + "%";
+    if(left<=0.05){
+      stopTimer();
+      handleAnswer(-1); // انتهى الوقت = خطأ
+    }
+  }, 80);
+}
+function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
 
-/* عرض سؤال */
-function render(){
-  const it = deck[current];
-  idxEl.textContent = current + 1;
-  catEl.textContent = it.cat;
-  qEl.textContent = it.q;
-  el('#meta').textContent = '';
-  barEl.style.width = ((current)/deck.length*100).toFixed(1) + '%';
+/* ============ عرض سؤال/إجابة ============ */
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
 
-  optionsEl.innerHTML = '';
-  it.options.forEach((txt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'opt';
-    btn.innerHTML = `<b style="opacity:.8">${String.fromCharCode(0x0660+i+1)}.</b> <span>${txt}</span>`;
-    btn.onclick = () => choose(i);
-    optionsEl.appendChild(btn);
+function renderQuestion(){
+  updateToolsState();
+  const item = questions[idx];
+  if(!item){ // لو خلصت الأسئلة الأقل من 100 (في حالة ما لصقتش القائمة كاملة)
+    endAt100(); return;
+  }
+  qNumEl.textContent = idx+1;
+  qTotalEl.textContent = TOTAL;
+  qEl.textContent = item.q;
+
+  answersEl.innerHTML = "";
+  answersEl.dataset.correct = item.correct;
+  const list = item.a.map((txt,i)=>({txt,i}));
+  list.forEach(({txt,i})=>{
+    const b = document.createElement('button');
+    b.textContent = txt;
+    b.addEventListener('click', ()=> handleAnswer(i));
+    answersEl.appendChild(b);
   });
+
+  startTimer();
 }
 
-/* اختيار */
-function choose(i){
-  const it = deck[current];
-  const nodes = [...optionsEl.children];
-  nodes[it.a].classList.add('correct');
-  if (i !== it.a) {
-    nodes[i].classList.add('wrong');
-    wrong++;
-  } else {
-    correct++;
-    score += 1;
-    scoreEl.textContent = score;
+function handleAnswer(choiceIndex){
+  // امنع نقرات إضافية:
+  [...answersEl.querySelectorAll('button')].forEach(b=>b.disabled=true);
+
+  const correctIndex = +answersEl.dataset.correct;
+  const btns = [...answersEl.querySelectorAll('button')];
+
+  if(choiceIndex === correctIndex){
+    rightSound();
+    btns[choiceIndex].classList.add('correct');
+    score++; scoreEl.textContent = score;
+
+    // حرك البطل للأمام قليلًا (إحساس RPG)
+    const hero = document.getElementById('hero');
+    hero.animate([{transform:'translateX(0)'},{transform:'translateX(-20px)'}], {duration:300,fill:'forwards'});
+  }else{
+    wrongSound();
+    if(choiceIndex>=0) btns[choiceIndex]?.classList.add('wrong');
+    btns[correctIndex]?.classList.add('correct');
   }
-  // منع اختيار مرة أخرى
-  nodes.forEach(n => n.onclick = null);
-  nextBtn.disabled = false;
-}
 
-/* إنهاء */
-function finish(){
-  stage.style.display = 'none';
-  result.style.display = '';
-  el('#finalScore').textContent = score;
-  el('#finalTotal').textContent = deck.length;
-  el('#ok').textContent = correct;
-  el('#ko').textContent = wrong;
-  el('#sk').textContent = skipped;
-  barEl.style.width = '100%';
+  stopTimer();
 
-  const best = Number(localStorage.getItem('quizBest') || 0);
-  if (score > best){
-    localStorage.setItem('quizBest', String(score));
-    bestEl.textContent = score;
+  // مكافآت / حالات خاصة
+  if(score === 50){
+    congratsAt50();
+    return;
   }
-}
-
-el('#restart').addEventListener('click', () => {
-  setup.style.display = '';
-  result.style.display = 'none';
-});
-
-/* مشاركة */
-function shareScore(){
-  const txt = `حصلت على ${score} من ${deck.length} في اختبار عام!`;
-  if (navigator.share) navigator.share({text:txt});
-  else alert(txt);
-}
-
-/* أدوات */
-function shuffle(a){
-  for (let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
+  if(idx === 99){ // السؤال رقم 100 (0-based)
+    endAt100();
+    return;
   }
-  return a;
+
+  setTimeout(()=>{ idx++; renderQuestion(); }, 650);
 }
+
+/* ============ التهنئة عند 50 ============ */
+function congratsAt50(){
+  overlay.style.display='flex';
+  const msg = encodeURIComponent("مرحبًا، فزت بتوصيلة مجانية من لعبة الأسئلة في موقع Fly Express ✅");
+  const wa = `https://wa.me/${WHATSAPP_PHONE}?text=${msg}`;
+  modal.innerHTML = `
+    <h3 style="margin:0 0 8px">🎉 مبروك!</h3>
+    <div class="msg">وصلت لـ <b>50</b> إجابة صحيحة! كسبت <b>توصيلة مجانية</b> 🚚.</div>
+    <div class="msg small">اضغط لإرسال رسالة على واتساب لتأكيد الجائزة، ثم عُد وأكمل التحدّي حتى السؤال 100 لتحصل على <b>3 توصيلات مجانية</b>!</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px">
+      <a class="cta" href="${wa}" target="_blank" rel="noopener">إرسال رسالة واتساب</a>
+      <button class="cta" onclick="document.getElementById('overlay').style.display='none'">رجوع للعبة</button>
+    </div>
+  `;
+  statusMsg.innerHTML = "رائع! أرسل رسالة التأكيد على واتساب، ثم أكمل حتى السؤال 100 لتحصل على 3 توصيلات مجانية 🎁";
+}
+
+/* ============ النهاية عند 100 ============ */
+function endAt100(){
+  stopTimer();
+  overlay.style.display='flex';
+  modal.innerHTML = `
+    <h3 style="margin:0 0 6px">🏁 إنهاء المستوى</h3>
+    <div class="msg">أنهيت 100 سؤال. نتيجتك النهائية: <b>${score}</b> صحيحة.</div>
+    <div class="msg">🎁 حصلت على <b>3 توصيلات مجانية</b> (بشرط إرسال رسالة التأكيد).</div>
+    <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+      <button class="cta" onclick="location.reload()">إعادة من البداية</button>
+    </div>
+  `;
+}
+
+/* ============ تشغيل ============ */
+function startGame(){
+  // ابدأ الموسيقى (قد يتطلب تفاعل أول للمستخدم على بعض الأجهزة)
+  const bgm = document.getElementById('bgm'); bgm.volume = 0.12; bgm.play().catch(()=>{});
+  score = 0; idx = 0; scoreEl.textContent = "0"; usedFifty=false; usedAudience=false;
+  fiftyBtn.classList.remove('enabled','used'); fiftyBtn.disabled=true;
+  audBtn.classList.remove('enabled','used'); audBtn.disabled=true;
+  helpersEl.textContent = "2"; // تُعتبر عدّاد مساعدات ظاهر فقط (رمزي)
+  statusMsg.textContent = "أجب على 50 سؤالًا لتحصل على توصيلـة مجانية 🚚";
+  renderQuestion();
+}
+startGame();
+
+/* تسهيل: أي ضغطة على لوحة المفاتيح = كليك صوت */
+window.addEventListener('keydown', clickSound, {once:true});
 </script>
 </body>
 </html>
