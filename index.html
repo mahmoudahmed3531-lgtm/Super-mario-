@@ -4,314 +4,319 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>من سيربح التوصيلات؟</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0a1b3d; --panel:#0e2a63; --panel2:#14387f; --line:#52a0ff;
-    --text:#eaf4ff; --ok:#19d27d; --bad:#ff3b3b; --warn:#ffc107; --glass: rgba(255,255,255,.06);
+    --bg:#03102a; --stage:#061c45; --ring:#0a2d6e; --line:#3ea3ff;
+    --text:#e9f4ff; --ok:#20d07a; --bad:#ff3e4e; --warn:#ffc107;
   }
   *{box-sizing:border-box}
-  body{margin:0; font-family:"Cairo",system-ui,sans-serif; color:var(--text);
-    background: radial-gradient(1200px 600px at 50% -200px,#183a8d,transparent) , linear-gradient(#061330,#0a1b3d 30%, #071631);
-    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px;}
-  .wrap{width:min(1000px,100%);}
-  .top{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;}
-  .logo{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:1px;
-    background:linear-gradient(135deg,#6ecbff,#b7e5ff); -webkit-background-clip:text; color:transparent;
-    font-size:clamp(20px,3.4vw,32px);}
-  .badge{background:var(--glass); padding:8px 12px; border:1px solid #2756aa; border-radius:999px; font-weight:700}
-  .lifelines{display:flex; gap:8px; flex-wrap:wrap}
-  .life{border:2px solid var(--line); color:#bfe2ff; background:linear-gradient(180deg,#163a86,#0e2a63);
-    padding:8px 12px; border-radius:999px; font-weight:800; cursor:pointer; position:relative;
-    box-shadow:0 0 0 2px rgba(82,160,255,.15) inset, 0 6px 18px rgba(0,0,0,.25);}
-  .life:disabled{opacity:.45; filter:grayscale(1); cursor:not-allowed}
-  .stage{background: radial-gradient(120% 100% at 50% -10%, #2557b6 0%, #0e2a63 65%, #0a1b3d 100%);
-    border:2px solid var(--line); border-radius:20px; padding:18px; position:relative; overflow:hidden;
-    box-shadow:0 0 30px rgba(82,160,255,.25) inset, 0 0 80px rgba(82,160,255,.15);}
-  .timerBar{height:6px; border-radius:6px; background:linear-gradient(90deg,var(--ok),#2ad0ff,var(--warn),var(--bad));
-    width:100%; transform-origin:left; margin:8px 0 14px; box-shadow:0 0 12px rgba(82,160,255,.4);}
-  .q{background:linear-gradient(180deg,#163a86,#0e2a63); border:2px solid var(--line); border-radius:16px;
-    padding:16px; font-weight:800; font-size:clamp(18px,2.2vw,22px); text-align:center; box-shadow:0 10px 24px rgba(0,0,0,.35);}
-  .answers{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px}
-  .ans{position:relative; overflow:hidden; border-radius:999px; border:2px solid var(--line);
-    background:linear-gradient(180deg,#14387f,#0f2f6b); padding:12px 16px; font-weight:800; cursor:pointer;
-    box-shadow:0 0 0 2px rgba(82,160,255,.2) inset, 0 6px 18px rgba(0,0,0,.25);}
-  .ans:disabled{opacity:.7; cursor:not-allowed}
-  .ans.correct{border-color:var(--ok); background:linear-gradient(180deg,#0b6c4c,#0b4231)}
-  .ans.wrong{border-color:var(--bad); background:linear-gradient(180deg,#7a0d0d,#430707)}
-  .ladder{margin-top:14px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:center;}
-  .step{border:1px solid #3c6ed8; padding:6px 10px; border-radius:999px; font-size:12px; opacity:.6}
-  .activeStep{background:#1a3f95; color:#fff; opacity:1;border-color:#79b8ff}
-  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(3,8,20,.65); backdrop-filter:blur(2px); z-index:20;}
-  .card{background:#0c1f4a; border:2px solid #5aa9ff; border-radius:18px; padding:20px; width:min(520px,92%);
-    text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.6);}
-  .cta{background:linear-gradient(180deg,#1b77ff,#1256c7); color:#fff; font-weight:900; border:none; padding:10px 16px;
-    border-radius:12px; cursor:pointer; box-shadow:0 10px 25px rgba(0,0,0,.35);}
-  .foot{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px; opacity:.9}
+  body{
+    margin:0; font-family:"Cairo",system-ui,sans-serif; color:var(--text);
+    min-height:100vh; display:grid; place-items:center; overflow-x:hidden;
+    background:
+      radial-gradient(1200px 700px at 50% -200px,#1947b6 0%,transparent 60%),
+      linear-gradient(#010814,#03102a 30%, #010814);
+  }
+  .wrap{width:min(1100px,96vw)}
+  /* ====== شريط علوي (وسائل المساعدة + العداد) ====== */
+  .top{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:12px}
+  .brand{font-weight:900; letter-spacing:.5px; font-size:clamp(20px,3vw,30px)}
+  .brand span{color:#21d07a}
+  .tools{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .pill{
+    background:linear-gradient(180deg,#113a86,#0b2663);
+    border:2px solid var(--line); color:#cfe9ff; border-radius:999px; padding:8px 14px;
+    font-weight:800; cursor:pointer; box-shadow:0 0 0 2px rgba(62,163,255,.2) inset, 0 8px 20px rgba(0,0,0,.25);
+  }
+  .pill:disabled{opacity:.45; filter:grayscale(1); cursor:not-allowed}
+  .badge{background:rgba(255,255,255,.06); border:1px solid #285fb1; padding:8px 12px; border-radius:999px; font-weight:800}
+
+  /* ====== المسرح الدائري ====== */
+  .stage{
+    position:relative; padding:22px 18px 26px; border-radius:26px; overflow:hidden;
+    border:2px solid var(--line); background:var(--stage);
+    box-shadow: 0 0 60px rgba(62,163,255,.22) inset, 0 0 120px rgba(62,163,255,.16);
+  }
+  /* دوائر الـ RPG */
+  .stage::before,.stage::after{
+    content:""; position:absolute; inset:-40% -10% auto -10%; height:140%;
+    background:
+      radial-gradient(closest-side,#2258bf 0%, transparent 55%) 50% 40%/60% 60% no-repeat,
+      radial-gradient(closest-side,#14387f 0%, transparent 55%) 50% 40%/80% 80% no-repeat,
+      radial-gradient(closest-side,rgba(62,163,255,.6) 0%, transparent 65%) 50% 40%/100% 100% no-repeat;
+    opacity:.25; pointer-events:none; filter:blur(2px);
+  }
+  .timerBar{height:8px; border-radius:8px; margin-bottom:14px;
+    background:linear-gradient(90deg,var(--ok),#27d4ff,var(--warn),var(--bad));
+    transform-origin:left; box-shadow:0 0 14px rgba(62,163,255,.5)}
+  .q{position:relative; margin:10px auto 12px; text-align:center; font-size:clamp(18px,2.3vw,24px);
+    font-weight:900; padding:16px 14px; color:#fff;
+    background:linear-gradient(180deg,#113a86 0%, #0b2663 100%);
+    border:2px solid var(--line); border-radius:20px; box-shadow:0 14px 28px rgba(0,0,0,.35)}
+  /* ====== اختيارات “أجنحة” مثل البرنامج ====== */
+  .grid{display:grid; grid-template-columns:1fr; gap:14px}
+  @media (min-width:680px){ .grid{grid-template-columns:1fr 1fr} }
+  .wing{
+    --c:#1b49a7;
+    position:relative; overflow:hidden; cursor:pointer; border:none; color:#e8f3ff;
+    background:linear-gradient(180deg,#113a86,#0b2663);
+    border:2px solid var(--line); padding:14px 20px; font-weight:900; font-size:clamp(15px,1.8vw,18px);
+    border-radius:999px; text-align:center; box-shadow:0 0 0 2px rgba(62,163,255,.22) inset, 0 10px 24px rgba(0,0,0,.28);
+  }
+  .wing::before,.wing::after{
+    content:""; position:absolute; top:0; bottom:0; width:20%; background:linear-gradient(180deg,#154189,#0e2f6b);
+    border:inherit; transform:skewX(35deg); box-shadow:inherit
+  }
+  .wing::before{ right:100%; border-right:none; border-radius:20px 0 0 20px }
+  .wing::after{ left:100%; border-left:none; border-radius:0 20px 20px 0 }
+  .wing:disabled{opacity:.7; cursor:not-allowed}
+  .correct{border-color:var(--ok)!important; background:linear-gradient(180deg,#0b6c4c,#0a3f2f)!important}
+  .wrong{border-color:var(--bad)!important; background:linear-gradient(180deg,#7a0d0d,#430707)!important}
+
+  /* سلم الأسئلة */
+  .ladder{margin-top:16px; display:grid; grid-template-columns:repeat(10,1fr); gap:6px}
+  .step{border:1px solid #2e5fb6; border-radius:999px; padding:6px 0; font-size:12px; text-align:center; opacity:.6}
+  .active{background:#1b49a7; color:#fff; opacity:1; border-color:#7fc4ff}
+  .prize{color:#ffd66b; border-color:#ffd66b; font-weight:900; opacity:1}
+
+  /* مودال */
+  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(2,8,24,.65); backdrop-filter:blur(2px); z-index:20}
+  .card{background:#0c1f4a; border:2px solid #5aa9ff; border-radius:18px; padding:22px; width:min(520px,92%); text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .cta{background:linear-gradient(180deg,#1b77ff,#1256c7); color:#fff; font-weight:900; border:none; padding:10px 16px; border-radius:12px; cursor:pointer}
   .muted{opacity:.5}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- أصوات -->
-  <audio id="bgm" src="https://cdn.pixabay.com/audio/2023/10/03/audio_93c6b46b3e.mp3" loop></audio>
-  <audio id="clickS" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6e2b4e.mp3"></audio>
-  <audio id="okS" src="https://cdn.pixabay.com/audio/2022/03/24/audio_5a7b66.mp3"></audio>
-  <audio id="badS" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6b0a8a.mp3"></audio>
 
-  <div class="wrap">
-    <div class="top">
-      <div class="logo">من سيربح <span style="color:#19d27d">التوصيلات</span>؟</div>
-      <div class="lifelines">
-        <button class="life" id="fifty">50:50</button>
-        <button class="life" id="aud">رأي الجمهور</button>
-        <button class="life" id="mute">كتم/تشغيل</button>
-        <div class="badge">السؤال: <b id="qNo">1</b>/<b id="qTotal">70</b></div>
-        <div class="badge">الوقت: <b id="tRemain">5</b>ث</div>
-      </div>
-    </div>
+<!-- أصوات -->
+<audio id="bgm" src="https://cdn.pixabay.com/audio/2023/10/03/audio_93c6b46b3e.mp3" loop></audio>
+<audio id="clk" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6e2b4e.mp3"></audio>
+<audio id="ok"  src="https://cdn.pixabay.com/audio/2022/03/24/audio_5a7b66.mp3"></audio>
+<audio id="bad" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6b0a8a.mp3"></audio>
 
-    <div class="stage">
-      <div id="timer" class="timerBar"></div>
-      <div id="qTxt" class="q">…</div>
-      <div id="answers" class="answers"></div>
-      <div id="ladder" class="ladder"></div>
-      <div class="foot">
-        <div>📱 عند الوصول للأسئلة 30/50/70 تُرسل رسالة واتساب بالجائزة.</div>
-        <div class="muted">⏱️ خطأ أو انتهاء الوقت = تبدأ من السؤال 1</div>
-      </div>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">من سيربح <span>التوصيلات</span>؟</div>
+    <div class="tools">
+      <button id="fifty" class="pill">50:50</button>
+      <button id="aud" class="pill">رأي الجمهور</button>
+      <button id="mute" class="pill">كتم/تشغيل</button>
+      <div class="badge">السؤال: <b id="qNo">1</b>/<b id="qTotal">70</b></div>
+      <div class="badge">الوقت: <b id="t">5</b>ث</div>
     </div>
   </div>
 
-  <div id="modal" class="modal">
-    <div class="card">
-      <div id="modalMsg" style="font-weight:900; font-size:20px; margin-bottom:12px">رسالة</div>
-      <button id="restart" class="cta">ابدأ من جديد</button>
-    </div>
+  <div class="stage">
+    <div id="bar" class="timerBar"></div>
+    <div id="q" class="q">…</div>
+    <div id="ans" class="grid"></div>
+    <div id="ladder" class="ladder"></div>
   </div>
+</div>
+
+<div id="pop" class="modal">
+  <div class="card">
+    <div id="msg" style="font-weight:900; font-size:20px; margin-bottom:12px">رسالة</div>
+    <button id="again" class="cta">ابدأ من جديد</button>
+  </div>
+</div>
 
 <script>
-// ====================== الإعدادات ======================
-const WHATSAPP_PHONE = "201234567890"; // ضع رقم واتساب الدولي بدون +
-const QUESTION_TIME = 5;               // 5 ثواني لكل سؤال
-const FINAL_TARGET  = 70;              // آخر سؤال
+/* ================= إعدادات ================= */
+const WHATSAPP_PHONE = "201234567890"; // ← غيّر رقم واتساب (دولي بدون +)
+const QUESTION_TIME  = 5; // ثواني
+const FINAL_TARGET   = 70;
 
-// ====================== بنك الأسئلة (70) ======================
-const QUESTIONS = [
-  {q:"أول من أسلم من الصبيان؟",a:["علي بن أبي طالب","زيد بن ثابت","ابن مسعود","الحسن"],c:0},
+const Q = [
+  {q:"أول من أسلم من الصبيان؟",a:["علي بن أبي طالب","زيد بن ثابت","عبدالله بن مسعود","الحسن"],c:0},
   {q:"عاصمة اليابان؟",a:["أوساكا","طوكيو","ناغويا","كيوتو"],c:1},
   {q:"أطول أنهار العالم؟",a:["الأمازون","النيل","اليانغتسي","الكونغو"],c:1},
   {q:"عدد أركان الإسلام؟",a:["خمسة","أربعة","ستة","سبعة"],c:0},
   {q:"سورة تُسمى قلب القرآن؟",a:["يس","الفاتحة","الإخلاص","الرحمن"],c:0},
   {q:"مخترع المصباح الكهربائي؟",a:["تسلا","أديسون","فاراداي","مورس"],c:1},
   {q:"عاصمة المغرب؟",a:["الدار البيضاء","الرباط","فاس","مراكش"],c:1},
-  {q:"عدد أحرف اللغة العربية؟",a:["28","29","27","26"],c:0},
-  {q:"أول مسجد بُني في الإسلام؟",a:["الأقصى","قباء","النبوي","الكوفة"],c:1},
+  {q:"عدد أحرف العربية؟",a:["28","29","27","26"],c:0},
+  {q:"أول مسجد بُني بالإسلام؟",a:["الأقصى","قباء","النبوي","الكوفة"],c:1},
   {q:"أكبر كواكب المجموعة الشمسية؟",a:["زحل","المشتري","أورانوس","نبتون"],c:1},
   {q:"الصلاة الوسطى هي؟",a:["الفجر","الظهر","العصر","المغرب"],c:2},
   {q:"عاصمة فرنسا؟",a:["برلين","مدريد","باريس","روما"],c:2},
-  {q:"اللغة الرسمية للبرازيل؟",a:["الإسبانية","البرتغالية","الإنجليزية","الفرنسية"],c:1},
-  {q:"سنة الهجرة النبوية توافق؟",a:["622م","610م","632م","642م"],c:0},
+  {q:"لغة البرازيل الرسمية؟",a:["الإسبانية","البرتغالية","الإنجليزية","الفرنسية"],c:1},
+  {q:"سنة الهجرة توافق؟",a:["622م","610م","632م","642م"],c:0},
   {q:"أكبر محيطات العالم؟",a:["الهندي","الأطلسي","الهادي","المتجمد"],c:2},
   {q:"أول خليفة عباسي؟",a:["المنصور","السفاح","المأمون","المهدي"],c:1},
-  {q:"صاحبة لقب كوكب الشرق؟",a:["فيروز","أم كلثوم","وردة","نجاة"],c:1},
-  {q:"أديب نوبل العربي؟",a:["العقاد","نجيب محفوظ","المنفلوطي","المعري"],c:1},
+  {q:"كوكب الشرق؟",a:["فيروز","أم كلثوم","وردة","نجاة"],c:1},
+  {q:"العربي الحاصل على نوبل أدب؟",a:["العقاد","نجيب محفوظ","المنفلوطي","المعري"],c:1},
   {q:"الكعبة تقع في؟",a:["مكة","المدينة","الطائف","جدة"],c:0},
   {q:"غاز التنفس الأساسي؟",a:["الهيدروجين","الأكسجين","النيتروجين","الهيليوم"],c:1},
   {q:"القارة التي تضم مصر؟",a:["آسيا","أفريقيا","أوروبا","أمريكا"],c:1},
   {q:"عدد السجدات في القرآن؟",a:["14","15","13","16"],c:1},
   {q:"غزوة بدر في السنة؟",a:["الأولى للهجرة","الثانية للهجرة","الثالثة","الرابعة"],c:1},
   {q:"عاصمة السودان؟",a:["الخرطوم","جوبا","بورتسودان","كسلا"],c:0},
-  {q:"أم المؤمنين الملقبة بحُميراء؟",a:["خديجة","عائشة","سودة","حفصة"],c:1},
+  {q:"أم المؤمنين الحُميراء؟",a:["خديجة","عائشة","سودة","حفصة"],c:1},
   {q:"مخترع الهاتف؟",a:["أديسون","جراهام بيل","ماركوني","تسلا"],c:1},
   {q:"أقدم جامعة قائمة؟",a:["هارفارد","القرويين","الأزهر","بولونيا"],c:1},
   {q:"عاصمة إسبانيا؟",a:["مدريد","برشلونة","فالنسيا","ملقا"],c:0},
   {q:"أول من جهر بالقرآن بمكة؟",a:["عمر","أبو بكر","ابن مسعود","بلال"],c:2},
   {q:"عدد الكواكب المعترف بها حاليًا؟",a:["8","9","7","6"],c:0},
-  {q:"صوم رمضان فرض في السنة؟",a:["الأولى للهجرة","الثانية للهجرة","الثالثة","العاشرة"],c:1},
-  {q:"كوكب يُعرف بالكوكب الأحمر؟",a:["بلوتو","المريخ","عطارد","الزُهرة"],c:1},
-  {q:"أطول سورة في القرآن؟",a:["آل عمران","البقرة","النساء","الأعراف"],c:1},
-  {q:"صاحب لقب سيف الله؟",a:["حمزة","خالد بن الوليد","عمر","علي"],c:1},
+  {q:"صوم رمضان فُرض في؟",a:["الأولى للهجرة","الثانية للهجرة","الثالثة","العاشرة"],c:1},
+  {q:"الكوكب الأحمر؟",a:["بلوتو","المريخ","عطارد","الزُهرة"],c:1},
+  {q:"أطول سورة؟",a:["آل عمران","البقرة","النساء","الأعراف"],c:1},
+  {q:"سيف الله؟",a:["حمزة","خالد بن الوليد","عمر","علي"],c:1},
   {q:"عاصمة تركيا؟",a:["إسطنبول","أنقرة","إزمير","بورصة"],c:1},
-  {q:"بحر يفصل بين أوروبا وأفريقيا؟",a:["العربي","المتوسط","الأسود","الأحمر"],c:1},
-  {q:"الصحابي مؤذن الرسول؟",a:["بلال","أبو هريرة","أبو موسى","سلمان"],c:0},
+  {q:"بحر يفصل أوروبا وأفريقيا؟",a:["العربي","المتوسط","الأسود","الأحمر"],c:1},
+  {q:"مؤذن الرسول؟",a:["بلال","أبو هريرة","أبو موسى","سلمان"],c:0},
   {q:"مدينة التلال السبع؟",a:["روما","أثينا","باريس","براغ"],c:0},
-  {q:"العمله الرسمية لمصر؟",a:["الجنيه","الريال","الدينار","الدولار"],c:0},
-  {q:"سورة تُسمى عروس القرآن؟",a:["الرحمن","يوسف","الكهف","النحل"],c:0},
-  {q:"سلاح العلم يرمز له في الطب؟",a:["الكأس","الصقر","العصا والثعبان","الشمعدان"],c:2},
+  {q:"العملة الرسمية لمصر؟",a:["الجنيه","الريال","الدينار","الدولار"],c:0},
+  {q:"عروس القرآن؟",a:["الرحمن","يوسف","الكهف","النحل"],c:0},
+  {q:"رمز الطب التقليدي؟",a:["الكأس","الصقر","العصا والثعبان","الشمعدان"],c:2},
   {q:"أشهر جبل في مكة؟",a:["الطور","عرفة","أحد","النور"],c:3},
-  {q:"القائد المسلم في معركة اليرموك؟",a:["عمرو بن العاص","خالد بن الوليد","سعد بن أبي وقاص","المثنى"],c:1},
-  {q:"المادة التي تكوّن الألماس؟",a:["الحديد","الكربون","السليكون","الذهب"],c:1},
+  {q:"قائد اليرموك؟",a:["عمرو بن العاص","خالد بن الوليد","سعد","المثنى"],c:1},
+  {q:"الألماس يتكون من؟",a:["الحديد","الكربون","السليكون","الذهب"],c:1},
   {q:"عاصمة لبنان؟",a:["بيروت","طرابلس","صيدا","صنعاء"],c:0},
-  {q:"الكاتب لطه حسين لقب؟",a:["عميد الأدب العربي","شيخ النقاد","أبو الرواية","أمير الشعراء"],c:0},
+  {q:"طه حسين لقبه؟",a:["عميد الأدب العربي","شيخ النقاد","أبو الرواية","أمير الشعراء"],c:0},
   {q:"أول من خطّ بالقلم؟",a:["إدريس","نوح","آدم","إبراهيم"],c:0},
   {q:"مدينة الأنوار؟",a:["باريس","لندن","مدريد","فيينا"],c:0},
   {q:"مقياس شدة الزلازل؟",a:["باسكال","ريختر","نيوتن","فولت"],c:1},
-  {q:"مدينة فلسطينية تُسمى عروس البحر؟",a:["عكا","يافا","حيفا","غزة"],c:1},
+  {q:"عروس البحر الفلسطينية؟",a:["عكا","يافا","حيفا","غزة"],c:1},
   {q:"أول الخلفاء الراشدين؟",a:["أبو بكر","عمر","عثمان","علي"],c:0},
   {q:"نهر دجلة يمر في؟",a:["سوريا","العراق","مصر","السودان"],c:1},
-  {q:"القارة الأصغر مساحة؟",a:["أستراليا","أوروبا","أنتاركتيكا","آسيا"],c:0},
-  {q:"صاحب قصيدة نهج البردة؟",a:["البوصيري","المتنبي","أحمد شوقي","عنترة"],c:0},
-  {q:"المعدن الأكثر توفّرًا بالقشرة الأرضية؟",a:["الألومنيوم","الحديد","النحاس","الزنك"],c:0},
-  {q:"كم عدد سنوات القرن؟",a:["50","100","75","200"],c:1},
-  {q:"أول من لقب بأمير المؤمنين؟",a:["عمر","علي","عثمان","أبو بكر"],c:0},
-  {q:"مدينة تُسمى أم الدنيا؟",a:["القاهرة","بغداد","دمشق","الرباط"],c:0},
-  {q:"سورة تُعرف بسورة القتال؟",a:["محمد","الأنفال","التوبة","الصف"],c:0},
-  {q:"عدد مفاتيح البيانو القياسي؟",a:["66","72","88","96"],c:2},
-  {q:"العالم مكتشف قانون الجاذبية؟",a:["آينشتاين","نيوتن","غاليلو","كبلر"],c:1},
-  {q:"عُمْر النبي عند البعثة؟",a:["25","30","40","45"],c:2},
-  {q:"كلمة (كتاب) جمعها؟",a:["كتب","كتابون","كتابات","مكتبات"],c:0},
+  {q:"أصغر القارات؟",a:["أستراليا","أوروبا","أنتاركتيكا","آسيا"],c:0},
+  {q:"نهج البردة لمن؟",a:["البوصيري","المتنبي","أحمد شوقي","عنترة"],c:0},
+  {q:"أكثر معدن بالقشرة؟",a:["الألومنيوم","الحديد","النحاس","الزنك"],c:0},
+  {q:"عدد سنوات القرن؟",a:["50","100","75","200"],c:1},
+  {q:"أول من لُقب بأمير المؤمنين؟",a:["عمر","علي","عثمان","أبو بكر"],c:0},
+  {q:"أم الدنيا؟",a:["القاهرة","بغداد","دمشق","الرباط"],c:0},
+  {q:"سورة القتال؟",a:["محمد","الأنفال","التوبة","الصف"],c:0},
+  {q:"مفاتيح البيانو القياسي؟",a:["66","72","88","96"],c:2},
+  {q:"مكتشف الجاذبية؟",a:["آينشتاين","نيوتن","غاليلو","كبلر"],c:1},
+  {q:"عمر النبي عند البعثة؟",a:["25","30","40","45"],c:2},
+  {q:"جمع (كتاب)؟",a:["كتب","كتابون","كتابات","مكتبات"],c:0},
   {q:"عملة السعودية؟",a:["الدينار","الدرهم","الريال","الجنيه"],c:2},
-  {q:"حرب أكتوبر كانت عام؟",a:["1973","1967","1956","1991"],c:0},
+  {q:"حرب أكتوبر؟",a:["1973","1967","1956","1991"],c:0},
   {q:"أول من طاف بالكعبة؟",a:["جبريل","إبراهيم","آدم","إسماعيل"],c:2},
   {q:"أعلى قمة في العالم؟",a:["كيليمنجارو","إيفرست","مون بلان","أكونكاجوا"],c:1},
-  {q:"أول من بنى السجون في الإسلام؟",a:["عمر","علي","معاوية","عمرو"],c:0},
-  {q:"سورة تُسمى بني إسرائيل؟",a:["الإسراء","النحل","التكوير","القيامة"],c:0},
+  {q:"أول من بنى السجون بالإسلام؟",a:["عمر","علي","معاوية","عمرو"],c:0},
+  {q:"سورة بني إسرائيل؟",a:["الإسراء","النحل","التكوير","القيامة"],c:0},
   {q:"العاصمة الاقتصادية للمغرب؟",a:["طنجة","الدار البيضاء","فاس","العيون"],c:1},
-  {q:"أداة قياس شدة الصوت؟",a:["ديسيبل","فولت","أوم","واط"],c:0},
+  {q:"مقياس شدة الصوت؟",a:["ديسيبل","فولت","أوم","واط"],c:0},
   {q:"أول من رمى بسهم في سبيل الله؟",a:["سعد بن أبي وقاص","طلحة","الزبير","حمزة"],c:0},
 ];
 
-// ====================== عناصر واجهة ======================
-const qTxt     = document.getElementById('qTxt');
-const answers  = document.getElementById('answers');
-const qNoEl    = document.getElementById('qNo');
-const qTotalEl = document.getElementById('qTotal');
-const timerBar = document.getElementById('timer');
-const tRemain  = document.getElementById('tRemain');
-const ladder   = document.getElementById('ladder');
-const modal    = document.getElementById('modal');
-const modalMsg = document.getElementById('modalMsg');
-const restart  = document.getElementById('restart');
-const fiftyBtn = document.getElementById('fifty');
-const audBtn   = document.getElementById('aud');
-const muteBtn  = document.getElementById('mute');
+const qEl=document.getElementById('q'), ansEl=document.getElementById('ans');
+const qNo=document.getElementById('qNo'), qTot=document.getElementById('qTotal');
+const bar=document.getElementById('bar'), tEl=document.getElementById('t');
+const ladder=document.getElementById('ladder'), pop=document.getElementById('pop');
+const msg=document.getElementById('msg'), again=document.getElementById('again');
+const fifty=document.getElementById('fifty'), aud=document.getElementById('aud'), mute=document.getElementById('mute');
+const bgm=document.getElementById('bgm'), clk=document.getElementById('clk'), ok=document.getElementById('ok'), bad=document.getElementById('bad');
 
-const bgm   = document.getElementById('bgm');
-const clickS= document.getElementById('clickS');
-const okS   = document.getElementById('okS');
-const badS  = document.getElementById('badS');
+qTot.textContent=FINAL_TARGET;
 
-qTotalEl.textContent = FINAL_TARGET;
+let idx=0, correctAt=0, timer=null, run=false, usedFifty=false, usedAud=false, muted=false;
 
-// ====================== حالة اللعبة ======================
-let idx=0, correctIndex=0, timer=null, running=false;
-let usedFifty=false, usedAudience=false;
-let muted=false;
+function play(a){ if(!muted){ try{a.currentTime=0; a.play()}catch(e){} } }
+function waSend(txt){ const url=`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(txt)}`; window.open(url,'_blank'); }
 
-// ====================== أدوات ======================
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function play(s){ if(!muted){try{s.currentTime=0; s.play()}catch(e){}} }
-function waSend(msg){ const url=`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`; window.open(url,'_blank'); }
-function showModal(msg){ modalMsg.innerHTML=msg; modal.style.display='grid'; }
-function hideModal(){ modal.style.display='none'; }
-function resetLifelines(){ usedFifty=false; usedAudience=false; fiftyBtn.disabled=false; audBtn.disabled=false; }
 function makeLadder(){
   ladder.innerHTML="";
   for(let i=1;i<=FINAL_TARGET;i++){
-    const d=document.createElement('div'); d.className='step'; d.textContent=i;
-    if(i===30||i===50||i===70){ d.style.borderColor="#ffd66b"; d.style.color="#ffd66b"; d.style.fontWeight="900"; }
-    ladder.appendChild(d);
+    const d=document.createElement('div');
+    d.className='step'+((i===30||i===50||i===70)?' prize':'');
+    d.textContent=i; ladder.appendChild(d);
   }
 }
-function markLadder(){ [...ladder.children].forEach((c,i)=>c.classList.toggle('activeStep',i===idx)); }
+function mark(){ [...ladder.children].forEach((c,i)=>c.classList.toggle('active',i===idx)); }
 
-// ====================== المؤقّت ======================
+function stop(){ if(timer){ clearInterval(timer); timer=null; } }
 function startTimer(){
-  stopTimer();
-  let left = QUESTION_TIME;
-  tRemain.textContent = left;
-  const start = Date.now();
-  timer = setInterval(()=>{
-    const remaining = Math.max(0, QUESTION_TIME - Math.floor((Date.now()-start)/1000));
-    tRemain.textContent = remaining;
-    timerBar.style.transform = `scaleX(${remaining/QUESTION_TIME})`;
-    if(remaining<=0){ stopTimer(); fail(); }
-  }, 200);
+  stop();
+  const start=Date.now();
+  tEl.textContent=QUESTION_TIME;
+  bar.style.transform='scaleX(1)';
+  timer=setInterval(()=>{
+    const r=Math.max(0,QUESTION_TIME-Math.floor((Date.now()-start)/1000));
+    tEl.textContent=r; bar.style.transform=`scaleX(${r/QUESTION_TIME})`;
+    if(r<=0){ stop(); fail(); }
+  },200);
 }
-function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
 
-// ====================== عرض السؤال ======================
 function render(){
-  running=true;
-  qNoEl.textContent = idx+1;
-  qTxt.textContent = QUESTIONS[idx].q;
+  run=true;
+  qNo.textContent=idx+1;
+  qEl.textContent=Q[idx].q;
 
-  answers.innerHTML="";
-  const order=[0,1,2,3]; shuffle(order);
-  correctIndex = order.indexOf(QUESTIONS[idx].c);
+  // ترتيب عشوائي للاختيارات
+  const order=[0,1,2,3]; for(let i=3;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]];}
+  correctAt = order.indexOf(Q[idx].c);
 
+  ansEl.innerHTML="";
   order.forEach((pos,i)=>{
     const b=document.createElement('button');
-    b.className='ans';
-    b.textContent = QUESTIONS[idx].a[pos];
-    b.onclick = ()=> choose(i);
-    answers.appendChild(b);
+    b.className='wing'; b.textContent=Q[idx].a[pos];
+    b.onclick=()=>choose(i); ansEl.appendChild(b);
   });
 
-  markLadder(); startTimer();
+  mark(); startTimer();
 }
 
-// ====================== اختيار الإجابة ======================
 function choose(i){
-  if(!running) return;
-  play(clickS); running=false; stopTimer();
-  const btns=[...answers.children];
-  if(i===correctIndex){
-    btns[i].classList.add('correct'); play(okS);
+  if(!run) return;
+  play(clk); run=false; stop();
+  const btns=[...ansEl.children];
+  if(i===correctAt){
+    btns[i].classList.add('correct'); play(ok);
     setTimeout(()=>{
-      const qNumber=idx+1;
-      if(qNumber===30){ showModal("🎉 مبروك! كسبت <b>توصيلة مجانية</b> ✅"); waSend("🎉 وصلت للسؤال 30 — كسبت توصيلة مجانية من Fly Express."); }
-      if(qNumber===50){ showModal("🎉 مبروك! كسبت <b>توصيلتين مجانًا</b> ✅"); waSend("🎉 وصلت للسؤال 50 — كسبت توصيلتين مجانًا من Fly Express."); }
-      if(qNumber===70){ showModal("🏆 مبروك! أنهيت اللعبة — كسبت <b>3 توصيلات مجانية</b> 🎁"); waSend("🏆 أنهيت جميع الأسئلة (70) — كسبت 3 توصيلات مجانية."); return; }
+      const n=idx+1;
+      if(n===30){ popMsg("🎉 مبروك! كسبت <b>توصيلة مجانية</b> ✅"); waSend("🎉 وصلت للسؤال 30 — كسبت توصيلة مجانية من Fly Express."); return; }
+      if(n===50){ popMsg("🎉 مبروك! كسبت <b>توصيلتين مجانًا</b> ✅"); waSend("🎉 وصلت للسؤال 50 — كسبت توصيلتين مجانًا من Fly Express."); return; }
+      if(n===70){ popMsg("🏆 أنهيت اللعبة — كسبت <b>3 توصيلات مجانية</b> 🎁"); waSend("🏆 أنهيت جميع الأسئلة (70) — كسبت 3 توصيلات مجانية."); return; }
       idx++; render();
     },650);
   }else{
-    btns[i].classList.add('wrong'); btns[correctIndex].classList.add('correct'); play(badS);
+    btns[i].classList.add('wrong'); btns[correctAt].classList.add('correct'); play(bad);
     setTimeout(fail,900);
   }
 }
-function fail(){ showModal("❌ إجابة خاطئة أو انتهى الوقت.<br>تبدأ من السؤال <b>1</b>."); }
 
-// ====================== إعادة التشغيل ======================
-restart.onclick=()=>{ hideModal(); idx=0; resetLifelines(); render(); };
+function popMsg(t){ msg.innerHTML=t; pop.style.display='grid'; }
+function fail(){ popMsg("❌ إجابة خاطئة أو انتهى الوقت.<br>ستبدأ من <b>السؤال 1</b>."); }
 
-// ====================== المساعدات ======================
-document.getElementById('fifty').onclick=()=>{
-  if(usedFifty) return; usedFifty=true; fiftyBtn.disabled=true;
-  const btns=[...answers.children]; let removed=0;
-  for(let i=0;i<btns.length;i++){ if(i!==correctIndex && removed<2){ btns[i].disabled=true; btns[i].style.opacity=.35; removed++; } }
+again.onclick=()=>{ pop.style.display='none'; idx=0; usedFifty=false; usedAud=false; fifty.disabled=false; aud.disabled=false; render(); };
+
+fifty.onclick=()=>{
+  if(usedFifty) return; usedFifty=true; fifty.disabled=true;
+  const btns=[...ansEl.children]; let r=0;
+  for(let i=0;i<btns.length;i++){ if(i!==correctAt && r<2){ btns[i].disabled=true; btns[i].style.opacity=.35; r++; } }
 };
-document.getElementById('aud').onclick=()=>{
-  if(usedAudience) return; usedAudience=true; audBtn.disabled=true;
+aud.onclick=()=>{
+  if(usedAud) return; usedAud=true; aud.disabled=true;
   const bars=[0,0,0,0]; let total=100, main=60+Math.floor(Math.random()*21);
-  bars[correctIndex]=main; total-=main;
-  for(let i=0;i<4;i++){ if(i===correctIndex) continue; const v=(i<3?Math.floor(Math.random()*(total-(3-i))):total); bars[i]=v; total-=v; }
-  const poll=document.createElement('div');
-  poll.style.cssText="position:absolute;inset:0;background:rgba(6,19,48,.85);display:grid;place-items:center;z-index:5;";
-  poll.innerHTML=`<div class="card" style="width:min(520px,92%);">
+  bars[correctAt]=main; total-=main;
+  for(let i=0;i<4;i++){ if(i===correctAt) continue; const v=(i<3?Math.floor(Math.random()*(total-(3-i))):total); bars[i]=v; total-=v; }
+  const overlay=document.createElement('div');
+  overlay.className='modal'; overlay.style.display='grid';
+  overlay.innerHTML=`<div class="card" style="width:min(520px,92%);">
     <div style="font-weight:900;margin-bottom:10px">📊 رأي الجمهور</div>
     <div style="display:grid;gap:8px;text-align:start">
       ${bars.map((p,i)=>`<div><b>${String.fromCharCode(65+i)}:</b>
       <span style="display:inline-block;height:10px;background:#52a0ff;width:${p*2}px;border-radius:6px;margin:0 6px -1px 6px"></span>
       <b>${p}%</b></div>`).join("")}
     </div>
-    <button class="cta" style="margin-top:14px" id="closePoll">حسنًا</button></div>`;
-  document.body.appendChild(poll);
-  document.getElementById('closePoll').onclick=()=>poll.remove();
+    <button class="cta" id="okpoll" style="margin-top:12px">حسنًا</button>
+  </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('okpoll').onclick=()=>overlay.remove();
 };
+mute.onclick=()=>{ muted=!muted; if(muted) bgm.pause(); else bgm.play().catch(()=>{}); mute.classList.toggle('muted',muted); };
 
-// كتم/تشغيل الموسيقى
-muteBtn.onclick=()=>{ muted=!muted; if(muted) bgm.pause(); else bgm.play().catch(()=>{}); muteBtn.classList.toggle('muted',muted); };
-
-// تشغيل أولي
+// تهيئة أولية
 (function init(){
-  // خلط الأسئلة للحيوية
-  shuffle(QUESTIONS);
-  // ضمان 70 فقط
-  while(QUESTIONS.length>FINAL_TARGET) QUESTIONS.pop();
-  // بناء السلّم
-  (function make(){ ladder.innerHTML=""; for(let i=1;i<=FINAL_TARGET;i++){ const d=document.createElement('div'); d.className='step'; d.textContent=i; if(i===30||i===50||i===70){ d.style.borderColor="#ffd66b"; d.style.color="#ffd66b"; d.style.fontWeight="900"; } ladder.appendChild(d);} })();
-  render();
+  // خلط الأسئلة، واقتصارها على 70 فقط
+  for(let i=Q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [Q[i],Q[j]]=[Q[j],Q[i]];}
+  while(Q.length>FINAL_TARGET) Q.pop();
+  qTot.textContent=FINAL_TARGET;
+  makeLadder(); render();
   bgm.volume=.5; bgm.play().catch(()=>{});
 })();
 </script>
