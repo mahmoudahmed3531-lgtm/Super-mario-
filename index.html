@@ -2,483 +2,427 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>Fly Runner — منصة 2D</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>اختبار عام — أسئلة وأجوبة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0b1526;--fg:#eaf1f6;--muted:#9fb3c6;--brand:#21f5b3}
-  *{box-sizing:border-box}html,body{margin:0;height:100%;background:radial-gradient(900px 500px at 10% 10%,#0b1f38 0,#0b1526 55%)}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Cairo",sans-serif;color:var(--fg);display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px}
-  header{display:flex;gap:10px;align-items:center;justify-content:space-between;width:min(980px,100%)}
-  h1{margin:0;font-size:22px}
-  .hud{display:flex;gap:12px;align-items:center;color:var(--muted);font-weight:700}
-  .tag{padding:6px 10px;border-radius:999px;background:#0f243d;border:1px solid #123;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
-  .btn{cursor:pointer;border:0;border-radius:10px;padding:8px 12px;background:linear-gradient(90deg,#00d27a,#00a8ff);color:#002; font-weight:900}
-  #game{width:min(980px,100%);aspect-ratio:16/9;background:#101c2f;border-radius:18px;border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35)}
-  canvas{width:100%;height:100%;display:block}
-  /* أزرار لمس للموبايل */
-  .touch{position:absolute;inset:auto 0 10px 0;display:flex;justify-content:space-between;pointer-events:none;padding:0 8px}
-  .pad{pointer-events:auto;display:flex;gap:10px}
-  .cbtn{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-weight:900}
-  .right{margin-left:auto}
-  .toast{position:absolute;left:50%;top:12px;transform:translateX(-50%);background:rgba(0,0,0,.55);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.08)}
-  .modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
-  .card{background:#0e2238;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;max-width:92%;text-align:center}
-  .leveldot{width:10px;height:10px;border-radius:50%;background:#234;margin:0 3px;display:inline-block}
-  .leveldot.on{background:var(--brand)}
-  .muted{opacity:.8}
+:root{
+  --bg:#0f172a; --card:#0b1024; --text:#e5eef7; --muted:#93a3b8;
+  --primary:#1cc09b; --accent:#22c55e; --wrong:#ef4444; --right:#22c55e; --brand:#33654F;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:radial-gradient(1200px 600px at 70% -10%,#122044 0%,#0b1229 40%,#061024 100%);
+  color:var(--text); font-family:'Cairo',system-ui,-apple-system,Segoe UI,Roboto,Arial; min-height:100svh;
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.container{
+  width:min(960px,100%); background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08); border-radius:20px; backdrop-filter: blur(8px);
+  box-shadow:0 20px 60px rgba(0,0,0,.45); overflow:hidden;
+}
+.header{
+  display:flex; align-items:center; justify-content:space-between; gap:10px; padding:18px 20px;
+  background:linear-gradient(90deg,var(--brand),#1f9d7d 60%,#22c55e); color:#fff;
+}
+.title{font-size:clamp(18px,2.8vw,26px); font-weight:800; letter-spacing:.4px}
+.badges{display:flex; gap:10px; flex-wrap:wrap}
+.badge{
+  display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px;
+  background:rgba(255,255,255,.18); font-weight:700; font-size:13px
+}
+.main{padding:20px}
+.card{
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
+  border-radius:16px; padding:16px; margin-bottom:14px;
+}
+.controls{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.controls .row{display:flex; gap:10px; flex-wrap:wrap}
+select, input, button{
+  width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.06); color:var(--text); outline:none
+}
+button{cursor:pointer; font-weight:800; letter-spacing:.3px}
+.btn-primary{background:linear-gradient(90deg,var(--brand),#16a085); border:none}
+.btn-ghost{background:transparent; border:1px dashed rgba(255,255,255,.25)}
+.info{display:flex; gap:10px; flex-wrap:wrap; align-items:center; color:var(--muted); font-size:14px}
+.progress{height:10px; background:rgba(255,255,255,.1); border-radius:999px; overflow:hidden}
+.progress > i{display:block; height:100%; background:linear-gradient(90deg,#22c55e,#10b981); width:0%}
+.q{
+  font-weight:700; font-size:clamp(18px,2.6vw,22px); line-height:1.6; margin-bottom:10px
+}
+.meta{display:flex; gap:8px; color:var(--muted); font-size:13px; flex-wrap:wrap}
+.options{display:grid; gap:10px; margin-top:10px}
+.opt{
+  display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.03); cursor:pointer; position:relative;
+}
+.opt:hover{border-color:rgba(255,255,255,.28); background:rgba(255,255,255,.06)}
+.opt.correct{border-color:rgba(34,197,94,.6); background:rgba(34,197,94,.15)}
+.opt.wrong{border-color:rgba(239,68,68,.6); background:rgba(239,68,68,.15)}
+.actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+.footer{padding:16px 20px; background:rgba(255,255,255,.04); border-top:1px solid rgba(255,255,255,.06)}
+.center{display:flex; align-items:center; justify-content:center}
+.small{font-size:12px; color:var(--muted)}
+.kpi{display:flex; gap:10px; flex-wrap:wrap}
+.kpi .item{background:rgba(255,255,255,.06); padding:10px 12px; border-radius:12px; font-weight:700}
+.final{ text-align:center; padding:30px 10px}
+.final h2{margin:0 0 6px; font-size:clamp(20px,3vw,28px)}
+.final p{color:var(--muted)}
+hr{border:none; border-top:1px dashed rgba(255,255,255,.15); margin:14px 0}
+@media (max-width:640px){
+  .controls{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-  <header>
-    <h1>🏃‍♂️ Fly Runner</h1>
-    <div class="hud">
-      <div class="tag">المرحلة: <b id="lvl">1</b>/7</div>
-      <div class="tag">السكور: <b id="score">0</b></div>
-      <div class="tag">المحاولات: <b id="tries">0</b></div>
-      <button id="btnPause" class="btn">⏸️ إيقاف مؤقت</button>
-      <button id="btnSound" class="btn">🔊 صوت: شغال</button>
-    </div>
-  </header>
-
-  <div id="game">
-    <canvas id="cvs" width="960" height="540" aria-label="لعبة منصات ثنائية الأبعاد"></canvas>
-
-    <!-- توست -->
-    <div id="toast" class="toast" hidden>اضغط للقفز — ← → للحركة</div>
-
-    <!-- أزرار لمس -->
-    <div class="touch">
-      <div class="pad">
-        <button class="cbtn" data-btn="left">←</button>
-        <button class="cbtn" data-btn="right">→</button>
-      </div>
-      <div class="pad right">
-        <button class="cbtn" data-btn="jump">⤒</button>
+  <div class="container">
+    <div class="header">
+      <div class="title">اختبار عام — أسئلة وأجوبة</div>
+      <div class="badges">
+        <div class="badge">🎯 <span id="score">0</span> نقطة</div>
+        <div class="badge">🏆 أفضل نتيجة: <span id="best">0</span></div>
       </div>
     </div>
 
-    <!-- شاشة فوز/خسارة -->
-    <div id="modal" class="modal">
-      <div class="card">
-        <h2 id="modalTitle">انتهت المرحلة!</h2>
-        <p id="modalDesc" class="muted"></p>
-        <div id="dots"></div>
-        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
-          <button id="btnRetry" class="btn">إعادة</button>
-          <button id="btnNext" class="btn">التالي ▶</button>
+    <div class="main">
+      <!-- إعدادات البداية -->
+      <div class="card" id="setup">
+        <div class="controls">
+          <div class="row">
+            <label style="width:100%">
+              الفئة
+              <select id="category">
+                <option value="all">كل الفئات</option>
+                <option value="ديني">ديني</option>
+                <option value="تاريخي">تاريخي</option>
+                <option value="ثقافي">ثقافي</option>
+                <option value="منوعات">منوعات</option>
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <label style="flex:1">
+              عدد الأسئلة في الجلسة
+              <select id="count">
+                <option>10</option>
+                <option selected>15</option>
+                <option>20</option>
+                <option>30</option>
+                <option value="all">كل المتاح</option>
+              </select>
+            </label>
+            <label style="flex:1">
+              ترتيب
+              <select id="order">
+                <option value="random" selected>عشوائي</option>
+                <option value="fixed">كما في القاعدة</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="startBtn">ابدأ الآن</button>
+          <button class="btn-ghost" id="howBtn">طريقة اللعب</button>
+        </div>
+        <p class="small">الأسئلة مأخوذة من معلومات عامة (ديني، تاريخي، ثقافي، منوعات) — مُهيأة للجوال والكمبيوتر.</p>
+      </div>
+
+      <!-- منطقة السؤال -->
+      <div class="card" id="stage" style="display:none">
+        <div class="info">
+          <div>السؤال <b id="idx">1</b>/<span id="total">0</span></div>
+          <div>الفئة: <b id="cat">—</b></div>
+        </div>
+        <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+        <div class="q" id="q">...</div>
+        <div class="meta" id="meta"></div>
+        <div class="options" id="options"></div>
+        <div class="actions">
+          <button class="btn-primary" id="nextBtn" disabled>السؤال التالي ↩︎</button>
+          <button class="btn-ghost" id="skipBtn">تخطي</button>
         </div>
       </div>
+
+      <!-- النتيجة -->
+      <div class="card" id="result" style="display:none">
+        <div class="final">
+          <h2>انتهت الجلسة! 🎉</h2>
+          <p>نتيجتك: <b id="finalScore">0</b> من <b id="finalTotal">0</b></p>
+          <div class="kpi center" style="justify-content:center;margin:10px 0">
+            <div class="item">✅ صحيحة: <span id="ok">0</span></div>
+            <div class="item">❌ خاطئة: <span id="ko">0</span></div>
+            <div class="item">⏭️ متخطاة: <span id="sk">0</span></div>
+          </div>
+          <hr>
+          <div class="actions center" style="justify-content:center">
+            <button class="btn-primary" id="restart">أعد المحاولة</button>
+            <button class="btn-ghost" onclick="shareScore()">مشاركة النتيجة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer small">
+      ملاحظة: يتم حفظ أفضل نتيجة على جهازك فقط.
     </div>
   </div>
 
 <script>
-/* ====== إعدادات عامة ====== */
-const S = {
-  g: 0.7,           // الجاذبية
-  move: 3.2,        // سرعة الحركة
-  jump: 12,         // قوة القفز
-  friction: 0.85,   // احتكاك أفقي بسيط
-  enemySpeed: 1.5,
-  coinSize: 12,
-  tile: 36,         // حجم الشبكة لسهولة تصميم المراحل
-  maxLives: 999
-};
-const state = {
-  level: 0,
-  score: 0,
-  tries: 0,
-  paused: false,
-  sound: true
-};
-const ui = {
-  lvl: document.getElementById('lvl'),
-  score: document.getElementById('score'),
-  tries: document.getElementById('tries'),
-  pause: document.getElementById('btnPause'),
-  sound: document.getElementById('btnSound'),
-  toast: document.getElementById('toast'),
-  modal: document.getElementById('modal'),
-  modalTitle: document.getElementById('modalTitle'),
-  modalDesc: document.getElementById('modalDesc'),
-  dots: document.getElementById('dots'),
-  retry: document.getElementById('btnRetry'),
-  next: document.getElementById('btnNext'),
-};
+/** ===========================
+ *  قاعدة الأسئلة (100 سؤال)
+ *  الحقول: q السؤال، options الاختيارات (4)، a رقم الإجابة الصحيحة (0..3)، cat الفئة
+ *  =========================== */
+const QUESTIONS = [
+  // ===== ديني (25) =====
+  {q:"ما أول ما يُحاسَب عليه العبد يوم القيامة؟",options:["الزكاة","الصلاة","الصوم","الحج"],a:1,cat:"ديني"},
+  {q:"كم عدد ركعات صلاة الفجر (الفرض)؟",options:["ركعتان","ثلاث","أربع","خمس"],a:0,cat:"ديني"},
+  {q:"في أي شهر فُرض صيام رمضان؟",options:["شعبان","رمضان","رجب","محرم"],a:0,cat:"ديني"},
+  {q:"ما هي السورة التي تُسمى قلب القرآن؟",options:["يس","الرحمن","الفاتحة","الكهف"],a:0,cat:"ديني"},
+  {q:"من هو خاتم الأنبياء؟",options:["إبراهيم","عيسى","محمد","موسى"],a:2,cat:"ديني"},
+  {q:"أركان الإسلام عددها:",options:["ثلاثة","أربعة","خمسة","ستة"],a:2,cat:"ديني"},
+  {q:"الغار الذي اختبأ فيه النبي ﷺ وأبو بكر:",options:["غار ثور","غار حراء","غار أحد","غار مني"],a:0,cat:"ديني"},
+  {q:"أطول سورة في القرآن:",options:["البقرة","النساء","آل عمران","المائدة"],a:0,cat:"ديني"},
+  {q:"ليلة القدر في العشر الأواخر من:",options:["محرم","رمضان","شعبان","ذي الحجة"],a:1,cat:"ديني"},
+  {q:"عدد السجدات في القرآن:",options:["10","12","14","15"],a:2,cat:"ديني"},
+  {q:"أول مسجد بُني في الإسلام:",options:["المسجد النبوي","المسجد الحرام","قباء","الأقصى"],a:2,cat:"ديني"},
+  {q:"الزكاة ركن…",options:["إيمان","إحسان","إسلام","تقوى"],a:2,cat:"ديني"},
+  {q:"نبي ابتُلِي بالمرض وصبر:",options:["أيوب","يونس","داود","سليمان"],a:0,cat:"ديني"},
+  {q:"عدد الأشهر الحُرم:",options:["٢","٣","٤","٥"],a:2,cat:"ديني"},
+  {q:"أقصر سورة في القرآن:",options:["الكوثر","الإخلاص","العصر","النصر"],a:0,cat:"ديني"},
+  {q:"أُمُّ المؤمنين التي لُقِّبت بالصِّدِّيقة:",options:["حفصة","عائشة","أم سلمة","سودة"],a:1,cat:"ديني"},
+  {q:"سورة تُسمى عروس القرآن:",options:["يوسف","الرحمن","مريم","الملك"],a:1,cat:"ديني"},
+  {q:"صلاة الخوف شُرعت في:",options:["السفر فقط","الحرب","المرض","الجمعة"],a:1,cat:"ديني"},
+  {q:"ما هو ركن الحج الأعظم؟",options:["الطواف","السعي","الوقوف بعرفة","رمي الجمرات"],a:2,cat:"ديني"},
+  {q:"كم عدد التكبيرات في صلاة العيد (الأولى قبل القراءة)؟",options:["3","5","7","9"],a:2,cat:"ديني"},
+  {q:"أول من أسلم من الصبيان:",options:["علي بن أبي طالب","الزبير","أنس","أسامة"],a:0,cat:"ديني"},
+  {q:"السورة التي تبدأ بـ(الحمد لله رب العالمين):",options:["الفاتحة","الأنعام","سبأ","فاطر"],a:0,cat:"ديني"},
+  {q:"الأذان شُرع في عهد:",options:["مكة","المدينة","الطائف","الحديبية"],a:1,cat:"ديني"},
+  {q:"السنة المؤكدة قبل الفجر:",options:["لا شيء","ركعة","ركعتان","أربع"],a:2,cat:"ديني"},
+  {q:"من هو ذو النون؟",options:["إدريس","يونس","يوسف","يعقوب"],a:1,cat:"ديني"},
 
-/* ====== صوتيات بسيطة (بييب) ====== */
-const snd = (()=> {
-  const ctx = new (window.AudioContext||window.webkitAudioContext)();
-  function beep(freq=700, dur=0.07, type='square'){
-    if(!state.sound) return;
-    const o=ctx.createOscillator(), g=ctx.createGain();
-    o.type=type; o.frequency.value=freq; o.connect(g); g.connect(ctx.destination);
-    g.gain.value=0.08; o.start();
-    setTimeout(()=>{o.stop();}, dur*1000);
-  }
-  return {coin:()=>beep(880), jump:()=>beep(660,0.08,'sine'), hit:()=>beep(200,0.12,'sawtooth'), win:()=>beep(1200,0.18,'triangle')}
-})();
+  // ===== تاريخي (25) =====
+  {q:"من هو القائد المسلم في معركة اليرموك؟",options:["عمرو بن العاص","خالد بن الوليد","أبو عبيدة","سعد بن أبي وقاص"],a:1,cat:"تاريخي"},
+  {q:"في أي عام سقطت الدولة الأموية؟",options:["750م","661م","632م","800م"],a:0,cat:"تاريخي"},
+  {q:"من أول خليفة عباسي؟",options:["المنصور","السفاح","المهدي","الهادي"],a:1,cat:"تاريخي"},
+  {q:"فتح القسطنطينية كان على يد:",options:["محمد الفاتح","صلاح الدين","نور الدين","قطز"],a:0,cat:"تاريخي"},
+  {q:"من قائد معركة حطين؟",options:["قطز","صلاح الدين الأيوبي","بيبرس","طارق بن زياد"],a:1,cat:"تاريخي"},
+  {q:"طارق بن زياد فتح:",options:["مصر","الأندلس","اليمن","بلاد السند"],a:1,cat:"تاريخي"},
+  {q:"الدولة التي وحّدت شبه الجزيرة العربية الحديثة:",options:["العثمانية","الأيوبية","السعودية","الزنكية"],a:2,cat:"تاريخي"},
+  {q:"الحضارة التي شيدت الأهرامات:",options:["الآشورية","الفينيقية","المصرية القديمة","الإغريقية"],a:2,cat:"تاريخي"},
+  {q:"اندلعت الحرب العالمية الأولى عام:",options:["1914","1918","1939","1945"],a:0,cat:"تاريخي"},
+  {q:"الحرب العالمية الثانية انتهت عام:",options:["1940","1943","1945","1950"],a:2,cat:"تاريخي"},
+  {q:"أول رئيس لمصر بعد ثورة 1952:",options:["السادات","عبدالناصر","محمد نجيب","مبارك"],a:2,cat:"تاريخي"},
+  {q:"من اكتشف قانون الجاذبية؟",options:["غاليلو","نيوتن","كوبرنيكوس","بلانك"],a:1,cat:"تاريخي"},
+  {q:"مدينة البتراء تقع في:",options:["سوريا","الأردن","مصر","العراق"],a:1,cat:"تاريخي"},
+  {q:"من بنى حدائق بابل المعلقة؟",options:["نبوخذنصر","حمورابي","سارغون","آشور بانيبال"],a:0,cat:"تاريخي"},
+  {q:"القائد الذي هزم المغول في عين جالوت:",options:["بيبرس","قطز","أرطغرل","محمد الفاتح"],a:1,cat:"تاريخي"},
+  {q:"من هو الرحالة المغربي الشهير؟",options:["ابن بطوطة","ابن جبير","المقدسي","ياقوت"],a:0,cat:"تاريخي"},
+  {q:"دولة سبأ ازدهرت في:",options:["بلاد الشام","بلاد الرافدين","اليمن","مصر"],a:2,cat:"تاريخي"},
+  {q:"عاصمة الدولة العباسية الأولى:",options:["بغداد","الكوفة","الأنبار","سامراء"],a:0,cat:"تاريخي"},
+  {q:"صلاح الدين حارب:",options:["المغول","التتار","الصليبيين","البيزنطيين"],a:2,cat:"تاريخي"},
+  {q:"من هو أول من لقب بأمير المؤمنين؟",options:["عمر","عثمان","علي","معاوية"],a:0,cat:"تاريخي"},
+  {q:"اتحدت ألمانيا الحديثة في القرن:",options:["الثامن عشر","التاسع عشر","العشرين","السابع عشر"],a:1,cat:"تاريخي"},
+  {q:"معركة بدر وقعت في السنة:",options:["الثانية للهجرة","الأولى","الثالثة","الخامسة"],a:0,cat:"تاريخي"},
+  {q:"من هو باني مدينة بغداد؟",options:["المعتصم","المنصور","المأمون","هارون الرشيد"],a:1,cat:"تاريخي"},
+  {q:"قناة السويس افتُتحت عام:",options:["1869","1914","1882","1967"],a:0,cat:"تاريخي"},
+  {q:"غرناطة سقطت سنة:",options:["1492","1453","1517","1200"],a:0,cat:"تاريخي"},
 
-/* ====== عناصر الرسم ====== */
-const cvs = document.getElementById('cvs');
-const ctx = cvs.getContext('2d');
+  // ===== ثقافي (25) =====
+  {q:"كاتب رواية «البؤساء»:",options:["تولستوي","فيكتور هوغو","ديكنز","زولا"],a:1,cat:"ثقافي"},
+  {q:"مؤلف «موسوعة ويكيبيديا» يُعد مثالًا على:",options:["الناشر التقليدي","المحتوى المفتوح","المدونات","الكتب الصوتية"],a:1,cat:"ثقافي"},
+  {q:"كم عدد أحرف اللغة العربية؟",options:["28","29","30","27"],a:0,cat:"ثقافي"},
+  {q:"عاصمة اليابان:",options:["أوساكا","سنداي","طوكيو","كيوتو"],a:2,cat:"ثقافي"},
+  {q:"الكِمْياء تُنسب إلى:",options:["الخوارزمي","جابر بن حيان","الرازي","ابن سينا"],a:1,cat:"ثقافي"},
+  {q:"وحدة قياس شدة الصوت:",options:["وات","ديسيبل","هيرتز","أوم"],a:1,cat:"ثقافي"},
+  {q:"مخترع المصباح الكهربائي:",options:["تسلا","إديسون","فاراداي","مورس"],a:1,cat:"ثقافي"},
+  {q:"أكبر كوكب في مجموعتنا الشمسية:",options:["زحل","المشتري","الأرض","نبتون"],a:1,cat:"ثقافي"},
+  {q:"اللغة الرسمية في البرازيل:",options:["الإسبانية","البرتغالية","الإنجليزية","الهولندية"],a:1,cat:"ثقافي"},
+  {q:"عدد قارات العالم:",options:["5","6","7","8"],a:2,cat:"ثقافي"},
+  {q:"أديب نوبل المصري:",options:["طه حسين","العقاد","نجيب محفوظ","يوسف إدريس"],a:2,cat:"ثقافي"},
+  {q:"أسرع حيوان بري:",options:["الغزال","الفهد","الحصان","الذئب"],a:1,cat:"ثقافي"},
+  {q:"جهاز قياس الزلازل:",options:["بارومتر","مرصد ضوئي","سيسموغراف","غلايكومتر"],a:2,cat:"ثقافي"},
+  {q:"أصغر عظمة في جسم الإنسان:",options:["الرّكاب","الأنف","عظم الرسغ","الترقوة"],a:0,cat:"ثقافي"},
+  {q:"الغاز الأكثر وفرة في الهواء:",options:["أكسجين","نيتروجين","أرجون","ثاني أكسيد الكربون"],a:1,cat:"ثقافي"},
+  {q:"الخط الذي يُكتب به المصحف غالبًا:",options:["الديواني","النسخ","الثلث","الرقعة"],a:1,cat:"ثقافي"},
+  {q:"عدد أضلاع المثلث:",options:["2","3","4","5"],a:1,cat:"ثقافي"},
+  {q:"الكوكب الأحمر:",options:["الزهرة","عطارد","المريخ","زحل"],a:2,cat:"ثقافي"},
+  {q:"أبو الطب:",options:["ابن سينا","الرازي","أبقراط","ابن النفيس"],a:2,cat:"ثقافي"},
+  {q:"مقياس الحرارة المئوي يُسمى:",options:["كلفن","فهرنهايت","سيليسيوس","نيوتن"],a:2,cat:"ثقافي"},
+  {q:"مؤلف «البيان والتبيين»:",options:["الحريري","الجاحظ","ابن خلدون","سيبويه"],a:1,cat:"ثقافي"},
+  {q:"مكتشف الدورة الدموية الصغرى:",options:["ابن سينا","ابن النفيس","الرازي","أبقراط"],a:1,cat:"ثقافي"},
+  {q:"الوتَر في الموسيقى هو:",options:["إيقاع","آلة نفخ","آلة وترية","طبلة"],a:2,cat:"ثقافي"},
+  {q:"لون الشاخصة التحذيرية في الطرق (غالبًا):",options:["أحمر/أبيض","أصفر/أسود","أزرق/أبيض","أخضر/أبيض"],a:1,cat:"ثقافي"},
+  {q:"السيمفونية فن مرتبط بـ:",options:["الرسم","الموسيقى","الشعر","الرقص"],a:1,cat:"ثقافي"},
 
-function rnd(min,max){return Math.random()*(max-min)+min;}
-function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h);}
-function roundRect(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); ctx.fill();}
-
-/* ====== تعريف المرحلة ككائن ====== */
-class Level {
-  constructor(def){
-    this.platforms = def.platforms;     // [{x,y,w,h}]
-    this.enemies   = def.enemies||[];   // [{x,y,range,dir}]
-    this.coins     = def.coins||[];     // [{x,y,taken:false}]
-    this.start     = def.start;         // {x,y}
-    this.goal      = def.goal;          // {x,y,w,h}
-    this.bg        = def.bg || '#0f1e33';
-    this.hills     = def.hills || [];
-  }
-}
-
-/* ====== اللاعب ====== */
-class Player{
-  constructor(x,y){ this.x=x; this.y=y; this.w=24; this.h=32; this.vx=0; this.vy=0; this.onGround=false; }
-  get rect(){return {x:this.x,y:this.y,w:this.w,h:this.h}}
-}
-
-/* ====== أعداء بسيطين رايح/جاي ====== */
-class Enemy{
-  constructor(x,y,range=80,dir=1){this.x=x;this.y=y;this.w=28;this.h=22;this.range=range;this.dir=dir;this.base=x;}
-  step(){
-    this.x += S.enemySpeed * this.dir;
-    if(Math.abs(this.x - this.base) > this.range) this.dir *= -1;
-  }
-}
-
-/* ====== اصطدام مستطيلات ====== */
-function hit(a,b){return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;}
-
-/* ====== مراحل (7) ====== */
-/* كل الاحداثيات بالبكسل. استعمل شبكة S.tile للمساعدة. */
-const T = S.tile;
-const LEVELS = [
-  // 1
-  new Level({
-    bg:'#0f1e33',
-    start:{x:60,y:420}, goal:{x:880,y:420,w:40,h:50},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:200,y:440,w:120,h:16},{x:380,y:390,w:140,h:16},
-      {x:600,y:440,w:110,h:16},{x:760,y:470,w:100,h:16}
-    ],
-    enemies:[{x:430,y:360,range:60,dir:1}],
-    coins:[{x:230,y:410},{x:410,y:360},{x:635,y:410},{x:790,y:440}]
-  }),
-  // 2
-  new Level({
-    start:{x:40,y:420}, goal:{x:900,y:300,w:38,h:50},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:150,y:450,w:90,h:14},{x:270,y:410,w:90,h:14},
-      {x:390,y:370,w:90,h:14},{x:520,y:330,w:90,h:14},{x:650,y:370,w:120,h:14},
-      {x:820,y:330,w:110,h:14}
-    ],
-    enemies:[{x:300,y:395,range:50,dir:1},{x:700,y:355,range:70,dir:-1}],
-    coins:[{x:175,y:420},{x:295,y:380},{x:415,y:340},{x:545,y:300},{x:690,y:340}]
-  }),
-  // 3
-  new Level({
-    start:{x:70,y:420}, goal:{x:880,y:140,w:40,h:50},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:160,y:460,w:90,h:14},{x:320,y:420,w:90,h:14},
-      {x:480,y:380,w:90,h:14},{x:640,y:340,w:90,h:14},{x:800,y:300,w:120,h:14},
-      {x:820,y:180,w:110,h:14}
-    ],
-    enemies:[{x:500,y:360,range:80,dir:-1}],
-    coins:[{x:185,y:430},{x:345,y:390},{x:505,y:350},{x:665,y:310},{x:840,y:150}]
-  }),
-  // 4
-  new Level({
-    start:{x:40,y:420}, goal:{x:900,y:460,w:36,h:50},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:220,y:460,w:460,h:14},{x:740,y:420,w:100,h:14},
-      {x:520,y:420,w:100,h:14},{x:360,y:390,w:100,h:14}
-    ],
-    enemies:[{x:280,y:445,range:160,dir:1},{x:560,y:405,range:70,dir:-1}],
-    coins:[{x:250,y:430},{x:410,y:360},{x:750,y:390},{x:900,y:430}]
-  }),
-  // 5
-  new Level({
-    start:{x:60,y:420}, goal:{x:900,y:270,w:36,h:50},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:160,y:470,w:100,h:14},{x:300,y:430,w:100,h:14},
-      {x:450,y:390,w:100,h:14},{x:610,y:350,w:100,h:14},{x:770,y:310,w:100,h:14}
-    ],
-    enemies:[{x:320,y:415,range:70,dir:1},{x:630,y:335,range:70,dir:-1}],
-    coins:[{x:185,y:440},{x:325,y:400},{x:475,y:360},{x:635,y:320},{x:795,y:280}]
-  }),
-  // 6
-  new Level({
-    start:{x:40,y:420}, goal:{x:880,y:420,w:42,h:50},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:180,y:470,w:110,h:14},{x:330,y:440,w:110,h:14},
-      {x:490,y:410,w:110,h:14},{x:650,y:380,w:110,h:14},{x:810,y:350,w:110,h:14}
-    ],
-    enemies:[{x:360,y:425,range:70},{x:680,y:365,range:70}],
-    coins:[{x:210,y:440},{x:360,y:410},{x:520,y:380},{x:680,y:350},{x:840,y:320}]
-  }),
-  // 7 (الأخيرة)
-  new Level({
-    start:{x:40,y:420}, goal:{x:900,y:120,w:44,h:54},
-    platforms:[
-      {x:0,y:500,w:960,h:40},{x:160,y:470,w:100,h:14},{x:300,y:430,w:100,h:14},
-      {x:440,y:390,w:100,h:14},{x:580,y:350,w:100,h:14},{x:720,y:310,w:100,h:14},
-      {x:860,y:270,w:100,h:14},{x:900,y:160,w:80,h:14}
-    ],
-    enemies:[{x:460,y:375,range:90,dir:1},{x:740,y:295,range:80,dir:-1}],
-    coins:[{x:185,y:440},{x:325,y:400},{x:465,y:360},{x:605,y:320},{x:745,y:280},{x:885,y:240}]
-  }),
+  // ===== منوعات (25) =====
+  {q:"عملة المملكة المتحدة:",options:["يورو","جنيه إسترليني","دولار","فرنك"],a:1,cat:"منوعات"},
+  {q:"أطول نهر في العالم (وفق قياسات حديثة غالبًا):",options:["الأمازون","النيـل","اليانغتسي","الكونغو"],a:1,cat:"منوعات"},
+  {q:"بحر يربط آسيا بأوروبا:",options:["العربي","الأسود","قزوين","الكرسي"],a:1,cat:"منوعات"},
+  {q:"أكبر محيط:",options:["الأطلسي","الهندي","الهادئ","المتجمد الشمالي"],a:2,cat:"منوعات"},
+  {q:"عدد البيكسلات بوحدة الميغابكسل يساوي:",options:["مليون بكسل","ألف بكسل","مليار بكسل","مئة ألف"],a:0,cat:"منوعات"},
+  {q:"لغة كبرى في الهند إلى جانب الهندية:",options:["أردية","بنغالية","تاميلية","بنجابية"],a:1,cat:"منوعات"},
+  {q:"المادة التي تعطي الدم لونه الأحمر:",options:["الهيموغلوبين","البلازما","الصفائح","اللمف"],a:0,cat:"منوعات"},
+  {q:"أكبر صحراء حارة:",options:["الجزيرة العربية","جوبي","الصحرا الكبرى","كالاهاري"],a:2,cat:"منوعات"},
+  {q:"أشهر برنامج جداول بيانات:",options:["وورد","أكسيس","إكسل","باوربوينت"],a:2,cat:"منوعات"},
+  {q:"أين تقع جزر المالديف؟",options:["المحيط الهندي","الهادئ","الأطلسي","المتجمد"],a:0,cat:"منوعات"},
+  {q:"عُملة اليابان:",options:["ون","يوان","ين","بات"],a:2,cat:"منوعات"},
+  {q:"أسرع شبكة اتصالات خلوية متاحة تجاريًا (حتى اليوم في أغلب الدول):",options:["3G","4G","5G","2G"],a:2,cat:"منوعات"},
+  {q:"الفيتامين المفيد للرؤية خاصةً:",options:["A","C","D","K"],a:0,cat:"منوعات"},
+  {q:"الحد الأقصى لقياس pH الحمضي يكون أقل من:",options:["7","6","8","9"],a:0,cat:"منوعات"},
+  {q:"عملية تحوّل الماء إلى بخار:",options:["تكاثف","تبخر","تسامي","ترسيب"],a:1,cat:"منوعات"},
+  {q:"عدد لاعبي فريق كرة السلة داخل الملعب:",options:["5","7","9","11"],a:0,cat:"منوعات"},
+  {q:"مسرحية «هاملت» من تأليف:",options:["شكسبير","دانتي","تشيخوف","موليير"],a:0,cat:"منوعات"},
+  {q:"أكبر حيوان على وجه الأرض:",options:["الحوت الأزرق","الفيل الإفريقي","الديناصور","الحوت الأحدب"],a:0,cat:"منوعات"},
+  {q:"مقر الاتحاد الأوروبي الرئيسي:",options:["روما","برلين","بروكسل","مدريد"],a:2,cat:"منوعات"},
+  {q:"الغاز المستخدم في بالونات الهيليوم:",options:["أكسجين","أرجون","هيليوم","نيتروجين"],a:2,cat:"منوعات"},
+  {q:"الرياضة الوطنية لليابان (شهيرة):",options:["جودو","سومو","كاراتيه","كونغ فو"],a:1,cat:"منوعات"},
+  {q:"تطبيق يُستخدم للمحادثات الفورية:",options:["فوتوشوب","إكسل","واتساب","إليستريتور"],a:2,cat:"منوعات"},
+  {q:"مدينة تُعرف بمدينة الضباب:",options:["باريس","لندن","أمستردام","فيينا"],a:1,cat:"منوعات"},
+  {q:"مقياس سرعة الرياح:",options:["أنيمومتر","بارومتر","هايدرومتر","أودومتر"],a:0,cat:"منوعات"},
+  {q:"الذهب يرمز له كيميائياً:",options:["Ag","Au","Fe","Pt"],a:1,cat:"منوعات"},
 ];
 
-/* ====== إدارة اللعبة ====== */
-let level, player, enemyObjs, coinObjs;
+/* =========================
+   منطق اللعبة
+   ========================= */
+const el = s => document.querySelector(s);
+const scoreEl = el('#score');
+const bestEl = el('#best');
+const idxEl = el('#idx');
+const totalEl = el('#total');
+const catEl = el('#cat');
+const qEl = el('#q');
+const optionsEl = el('#options');
+const barEl = el('#bar');
 
-function loadLevel(i){
-  state.level = i;
-  level = LEVELS[i];
-  player = new Player(level.start.x, level.start.y);
-  enemyObjs = level.enemies.map(e=>new Enemy(e.x,e.y,e.range,e.dir));
-  coinObjs = level.coins.map(c=>({x:c.x,y:c.y,taken:false,w:18,h:18}));
-  ui.lvl.textContent = i+1;
-  ui.modal.style.display='none';
-  showDots();
-  ui.toast.hidden=false;
-}
+const setup = el('#setup');
+const stage = el('#stage');
+const result = el('#result');
 
-function nextLevel(){
-  if(state.level < LEVELS.length-1) loadLevel(state.level+1);
-  else showWinGame();
-}
+const nextBtn = el('#nextBtn');
+const skipBtn = el('#skipBtn');
 
-function showDots(){
-  ui.dots.innerHTML='';
-  LEVELS.forEach((_,idx)=>{
-    const d=document.createElement('span');
-    d.className='leveldot'+(idx<=state.level?' on':'');
-    ui.dots.appendChild(d);
+let current = 0, score = 0, correct = 0, wrong = 0, skipped = 0;
+let deck = [];
+
+/* تحميل أفضل نتيجة */
+bestEl.textContent = localStorage.getItem('quizBest') || 0;
+
+/* ابدأ */
+el('#startBtn').addEventListener('click', () => {
+  const cat = el('#category').value;
+  const order = el('#order').value;
+  let list = cat === 'all' ? [...QUESTIONS] : QUESTIONS.filter(x => x.cat === cat);
+
+  // ترتيب
+  if (order === 'random') list = shuffle(list);
+
+  // عدد
+  const selected = el('#count').value;
+  if (selected !== 'all') list = list.slice(0, Number(selected));
+
+  deck = list;
+  totalEl.textContent = deck.length;
+  current = 0; score = 0; correct = 0; wrong = 0; skipped = 0;
+  scoreEl.textContent = 0;
+
+  setup.style.display = 'none';
+  result.style.display = 'none';
+  stage.style.display = '';
+  render();
+});
+
+el('#howBtn').addEventListener('click', () => {
+  alert('اختر الفئة وعدد الأسئلة ثم اضغط "ابدأ الآن".\nاختر الإجابة الصحيحة من بين 4 اختيارات.\nيمكنك تخطي السؤال، وفي النهاية تُعرض نتيجتك وأفضل نتيجة محفوظة.');
+});
+
+nextBtn.addEventListener('click', () => {
+  current++;
+  if (current < deck.length) render();
+  else finish();
+  nextBtn.disabled = true;
+});
+
+skipBtn.addEventListener('click', () => {
+  skipped++; nextBtn.disabled = false;
+});
+
+/* عرض سؤال */
+function render(){
+  const it = deck[current];
+  idxEl.textContent = current + 1;
+  catEl.textContent = it.cat;
+  qEl.textContent = it.q;
+  el('#meta').textContent = '';
+  barEl.style.width = ((current)/deck.length*100).toFixed(1) + '%';
+
+  optionsEl.innerHTML = '';
+  it.options.forEach((txt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<b style="opacity:.8">${String.fromCharCode(0x0660+i+1)}.</b> <span>${txt}</span>`;
+    btn.onclick = () => choose(i);
+    optionsEl.appendChild(btn);
   });
 }
 
-/* ====== إدخال المستخدم ====== */
-const keys = {left:false,right:false,up:false};
-window.addEventListener('keydown',e=>{
-  if(['ArrowLeft','a','A'].includes(e.key)) keys.left=true;
-  if(['ArrowRight','d','D'].includes(e.key)) keys.right=true;
-  if(['ArrowUp','w','W',' '].includes(e.key)){ jump(); }
+/* اختيار */
+function choose(i){
+  const it = deck[current];
+  const nodes = [...optionsEl.children];
+  nodes[it.a].classList.add('correct');
+  if (i !== it.a) {
+    nodes[i].classList.add('wrong');
+    wrong++;
+  } else {
+    correct++;
+    score += 1;
+    scoreEl.textContent = score;
+  }
+  // منع اختيار مرة أخرى
+  nodes.forEach(n => n.onclick = null);
+  nextBtn.disabled = false;
+}
+
+/* إنهاء */
+function finish(){
+  stage.style.display = 'none';
+  result.style.display = '';
+  el('#finalScore').textContent = score;
+  el('#finalTotal').textContent = deck.length;
+  el('#ok').textContent = correct;
+  el('#ko').textContent = wrong;
+  el('#sk').textContent = skipped;
+  barEl.style.width = '100%';
+
+  const best = Number(localStorage.getItem('quizBest') || 0);
+  if (score > best){
+    localStorage.setItem('quizBest', String(score));
+    bestEl.textContent = score;
+  }
+}
+
+el('#restart').addEventListener('click', () => {
+  setup.style.display = '';
+  result.style.display = 'none';
 });
-window.addEventListener('keyup',e=>{
-  if(['ArrowLeft','a','A'].includes(e.key)) keys.left=false;
-  if(['ArrowRight','d','D'].includes(e.key)) keys.right=false;
-});
 
-function jump(){
-  if(player.onGround){
-    player.vy = -S.jump; player.onGround=false; snd.jump();
+/* مشاركة */
+function shareScore(){
+  const txt = `حصلت على ${score} من ${deck.length} في اختبار عام!`;
+  if (navigator.share) navigator.share({text:txt});
+  else alert(txt);
+}
+
+/* أدوات */
+function shuffle(a){
+  for (let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
   }
+  return a;
 }
-
-/* لمس */
-document.querySelectorAll('.cbtn').forEach(btn=>{
-  const t=btn.dataset.btn;
-  const set=(v)=>{ if(t==='left')keys.left=v; if(t==='right')keys.right=v; if(t==='jump' && v) jump(); };
-  btn.addEventListener('touchstart',e=>{e.preventDefault(); set(true);});
-  btn.addEventListener('touchend',e=>{e.preventDefault(); set(false);});
-  btn.addEventListener('mousedown',()=>set(true));
-  btn.addEventListener('mouseup',()=>set(false));
-  btn.addEventListener('mouseleave',()=>set(false));
-});
-
-/* ====== فيزياء/تحديث ====== */
-function update(){
-  if(state.paused) return;
-
-  // حركة أفقية
-  if(keys.left)  player.vx = -S.move;
-  if(keys.right) player.vx =  S.move;
-  if(!keys.left && !keys.right) player.vx *= S.friction;
-
-  player.x += player.vx;
-
-  // حدود الشاشة
-  player.x = Math.max(0, Math.min(cvs.width - player.w, player.x));
-
-  // جاذبية
-  player.vy += S.g;
-  player.y += player.vy;
-
-  // منصّات/أرض
-  player.onGround = false;
-  const prect = player.rect;
-
-  for(const p of level.platforms){
-    const r = p; // {x,y,w,h}
-    // اصطدام من أعلى
-    if(hit(prect, r)){
-      const prevBottom = player.y - player.vy + player.h;
-      if(prevBottom <= r.y){ // كان فوق المنصة ونزل عليها
-        player.y = r.y - player.h;
-        player.vy = 0;
-        player.onGround = true;
-      }else if(player.y - player.vy >= r.y + r.h){ // ضرب من أسفل
-        player.y = r.y + r.h;
-        player.vy = 0.5;
-      }else{
-        // اصطدام جانبي
-        if(prect.x + prect.w/2 < r.x + r.w/2) player.x = r.x - player.w;
-        else player.x = r.x + r.w;
-        player.vx = 0;
-      }
-    }
-  }
-
-  // أرضية النهائية
-  const ground = {x:0,y:500,w:960,h:40}; // مكررة في المستويات
-  if(hit(prect, ground)){
-    if(player.y - player.vy + player.h <= ground.y){
-      player.y = ground.y - player.h; player.vy=0; player.onGround=true;
-    }
-  }
-
-  // سقوط خارج الشاشة = خسارة
-  if(player.y > cvs.height+200) return lose();
-
-  // أعداء
-  enemyObjs.forEach(e=>{
-    e.step();
-    if(hit(prect, {x:e.x,y:e.y,w:e.w,h:e.h})){
-      // لو اللاعب نازل من أعلى يقتل العدو
-      if(player.vy > 2){
-        player.vy = -S.jump*0.7;
-        e.y = 20000; // شيله
-        snd.coin();
-        state.score += 50;
-      }else{
-        return lose();
-      }
-    }
-  });
-
-  // كوينز
-  coinObjs.forEach(c=>{
-    if(!c.taken && hit(prect,c)){
-      c.taken = true; state.score += 10; snd.coin();
-    }
-  });
-
-  // الوصول للهدف
-  const g = level.goal;
-  if(hit(prect, g)){
-    snd.win();
-    ui.modalTitle.textContent = (state.level===LEVELS.length-1)? 'مبروك! أنهيت اللعبة 🎉' : 'مرحلة مكتملة ✅';
-    ui.modalDesc.textContent = `سكورك الحالي: ${state.score}`;
-    ui.modal.style.display='flex';
-    state.paused = true;
-  }
-
-  ui.score.textContent = state.score;
-}
-
-/* ====== خسارة ====== */
-function lose(){
-  snd.hit();
-  state.tries++;
-  ui.tries.textContent = state.tries;
-  ui.modalTitle.textContent = 'خسرت 😅';
-  ui.modalDesc.textContent = 'جرّب تاني — تقدر تعملها!';
-  ui.modal.style.display='flex';
-  state.paused = true;
-}
-
-/* ====== فوز نهائي ====== */
-function showWinGame(){
-  ui.modalTitle.textContent='اللعبة خلصت 🎉';
-  ui.modalDesc.textContent=`إجمالي السكور: ${state.score} — محاولات: ${state.tries}`;
-  ui.modal.style.display='flex';
-}
-
-/* ====== رسم ====== */
-function drawBackground(){
-  // سماء
-  rect(0,0,cvs.width,cvs.height,level.bg || '#0f1e33');
-  // تلال بسيطة
-  for(let i=0;i<6;i++){
-    roundRect(i*180+50, 480, 160, 40, 20, '#11304f');
-  }
-  // أرض
-  rect(0,500,960,40,'#143458');
-  for(let i=0;i<32;i++){
-    rect(i*30, 500, 28, 40, `rgba(255,255,255,.03)`);
-  }
-}
-
-function draw(){
-  drawBackground();
-
-  // منصات
-  ctx.fillStyle='#1a436d';
-  level.platforms.forEach(p=>roundRect(p.x,p.y,p.w,p.h,6,'#1a436d'));
-
-  // هدف
-  const g=level.goal;
-  roundRect(g.x,g.y,g.w||40,g.h||50,6,'#2ecc71');
-  rect(g.x+(g.w||40)-6,g.y-24,4,24,'#9ff');
-  roundRect(g.x-12,g.y-12,18,12,4,'#2ecc71');
-
-  // عملات
-  coinObjs.forEach(c=>{
-    if(c.taken) return;
-    const t = Math.sin(perf*0.006 + c.x)*3;
-    roundRect(c.x, c.y+t, 18, 18, 6, '#ffd166');
-    rect(c.x+7,c.y+t+4,4,10,'#b38600');
-  });
-
-  // أعداء
-  enemyObjs.forEach(e=>{
-    roundRect(e.x,e.y,e.w,e.h,6,'#ff5b5b');
-    rect(e.x+6,e.y+e.h-6,e.w-12,4,'#a11');
-  });
-
-  // لاعب
-  roundRect(player.x,player.y,player.w,player.h,6,'#21f5b3');
-  rect(player.x+6,player.y+player.h-5,player.w-12,3,'#0b9');
-
-  // HUD داخلي بسيط
-  // ctx.fillStyle='rgba(255,255,255,.06)'; ctx.fillRect(0,0,960,24);
-}
-
-let perf=0;
-function loop(t){
-  perf=t||0;
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
-
-/* ====== أزرار الواجهة ====== */
-ui.pause.addEventListener('click',()=>{
-  state.paused=!state.paused;
-  ui.pause.textContent = state.paused ? '▶️ متابعة' : '⏸️ إيقاف مؤقت';
-});
-ui.sound.addEventListener('click',()=>{
-  state.sound=!state.sound;
-  ui.sound.textContent = state.sound ? '🔊 صوت: شغال' : '🔈 صوت: مقفول';
-});
-ui.retry.addEventListener('click',()=>{ state.paused=false; loadLevel(state.level); ui.pause.textContent='⏸️ إيقاف مؤقت'; });
-ui.next.addEventListener('click',()=>{ state.paused=false; nextLevel(); ui.pause.textContent='⏸️ إيقاف مؤقت'; });
-
-/* ====== تشغيل ====== */
-loadLevel(0);
-requestAnimationFrame(loop);
-setTimeout(()=>ui.toast.hidden=true, 3000);
 </script>
 </body>
 </html>
