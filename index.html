@@ -4,177 +4,132 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>لعبة الأسئلة — Fly Express</title>
-<link rel="manifest" href="manifest.json" />
 <style>
   :root{
-    --bg:#0b1724;
-    --card:#0f1f30;
-    --text:#e9f3ff;
-    --muted:#96b2d6;
-    --primary:#2ecc71;
-    --warn:#ffd166;
-    --danger:#ff5e6c;
-    --brand:#2f9e44;
-    --brand2:#4dabf7;
-    --glass: rgba(255,255,255,.06);
-    --ring: linear-gradient(90deg,#22d3ee,#a78bfa,#34d399);
+    --bg:#0b1724;--card:#0f1f30;--text:#e9f3ff;--muted:#96b2d6;
+    --ring:linear-gradient(90deg,#22d3ee,#a78bfa,#34d399);
   }
   *{box-sizing:border-box}
   body{
-    margin:0; background:
-      radial-gradient(1000px 500px at 20% -10%, #10243c 0%, transparent 60%),
-      radial-gradient(900px 480px at 100% 0%, #11283d 0%, transparent 60%),
-      var(--bg);
-    font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, Noto Naskh Arabic, sans-serif;
-    color:var(--text);
-    min-height:100dvh;
+    margin:0;min-height:100dvh;color:var(--text);
+    background: radial-gradient(900px 460px at 15% -10%,#10243c 0,transparent 60%),
+               radial-gradient(900px 460px at 110% 0,#11283d 0,transparent 60%),var(--bg);
+    font-family:"Cairo",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Naskh Arabic",sans-serif
   }
-  .container{
-    max-width:980px;margin:28px auto;padding:16px;
-  }
+  .container{max-width:980px;margin:28px auto;padding:16px}
   .panel{
-    background: linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.12));
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.12));
     border:1px solid rgba(255,255,255,.08);
-    box-shadow: 0 20px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
-    border-radius:24px; padding:24px 20px;
+    border-radius:24px;padding:22px 18px;box-shadow:0 20px 60px rgba(0,0,0,.35)
   }
-  h1{margin:6px 0 2px; font-size:44px; text-align:center; letter-spacing:.5px}
-  .sub{ text-align:center; color:var(--muted); font-weight:700; font-size:18px; }
-  .stats{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin:16px 0 12px; }
-  .pill{
-    background: rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:16px; padding:12px 18px; font-weight:800; color:#d9ecff;
-    min-width:160px; text-align:center;
-  }
-  .lifelines{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
-  .life-btn{
-    border:0; border-radius:16px; padding:12px 16px; font-weight:800; color:#0e1a27; cursor:pointer;
-    background: linear-gradient(135deg,#b3e5fc,#80deea);
-    box-shadow:0 8px 24px rgba(0,0,0,.25);
-  }
-  .life-btn:disabled{ opacity:.45; filter:grayscale(.4); cursor:not-allowed; }
-  .questionBox{
-    margin:14px auto 18px; padding:18px;
-    border-radius:18px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
-  }
-  .meter{height:8px;border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin:2px 0 14px;}
-  .meter>i{display:block;height:100%; background:var(--ring); width:0%;}
-  .q{font-size:28px; text-align:center; font-weight:900; margin:10px 6px;}
-  .answers{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:10px; }
-  @media(min-width:680px){ .answers{ grid-template-columns:1fr 1fr; } }
-  .ans{
-    border:0; border-radius:16px; padding:16px; font-size:18px; font-weight:800; color:#0b1522; cursor:pointer;
-    background: linear-gradient(135deg,#a9d6ff,#b79cff);
-    box-shadow:0 10px 30px rgba(0,0,0,.28);
-    transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
-  }
-  .ans:hover{ transform: translateY(-1px); }
-  .ans.correct{ background: linear-gradient(135deg,#9cffc7,#71e8b1); color:#052616;}
-  .ans.wrong{ background: linear-gradient(135deg,#ffb3b3,#ff8c8c); color:#3a0a0a; }
-  .hud{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px;}
-  .badge{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:#eef6ff;
-    border-radius:14px; padding:10px 14px; font-weight:800; min-width:150px; text-align:center;}
-  .cta-wrap{ display:flex; justify-content:center; margin:16px 0 0; }
-  .start{ border:0; border-radius:18px; padding:14px 22px; font-size:18px; font-weight:900; cursor:pointer;
-    background: linear-gradient(135deg,#ffd166,#ff7e67); color:#181818; box-shadow:0 18px 40px rgba(0,0,0,.35);}
-  .music-toggle{ position: fixed; left:16px; bottom:16px; z-index:9; padding:12px 16px; border-radius:14px; border:0;
-    background: linear-gradient(135deg,#ffe082,#ffca28); color:#101; font-weight:900; box-shadow:0 8px 24px rgba(0,0,0,.25);}
-  .toast{ position:fixed; inset:auto 0 18px 0; display:flex; justify-content:center; pointer-events:none; z-index:50;}
+  h1{margin:6px 0 2px;font-size:44px;text-align:center}
+  .rpgTitle{font-size:22px;text-align:center;color:#9ad0ff;font-weight:900}
+  .sub{ text-align:center;color:#bfe1ff;font-weight:800;margin-top:6px}
+  .lifelines{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+  .life-btn{border:0;border-radius:14px;padding:10px 14px;font-weight:900;color:#0d1522;
+            background:linear-gradient(135deg,#b3e5fc,#80deea);box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer}
+  .life-btn:disabled{opacity:.5;filter:grayscale(.5);cursor:not-allowed}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:6px 0 10px}
+  .pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+        border-radius:14px;padding:10px 16px;font-weight:800;min-width:160px;text-align:center}
+  .questionBox{margin:10px auto 16px;padding:18px;border-radius:18px;background:rgba(255,255,255,.05);
+               border:1px solid rgba(255,255,255,.08)}
+  .meter{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:4px 0 10px}
+  .meter>i{display:block;height:100%;background:var(--ring);width:0%}
+  .q{font-size:28px;text-align:center;font-weight:900;margin:10px 6px}
+  .answers{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+  @media(min-width:680px){.answers{grid-template-columns:1fr 1fr}}
+  .ans{border:0;border-radius:16px;padding:16px;font-size:18px;font-weight:800;color:#0b1522;cursor:pointer;
+       background:linear-gradient(135deg,#a9d6ff,#b79cff);box-shadow:0 10px 30px rgba(0,0,0,.28);
+       transition:transform .08s ease,filter .2s ease}
+  .ans:hover{transform:translateY(-1px)}
+  .ans.correct{background:linear-gradient(135deg,#9cffc7,#71e8b1);color:#052616}
+  .ans.wrong{background:linear-gradient(135deg,#ffb3b3,#ff8c8c);color:#3a0a0a}
+  .audience{display:none;margin-top:8px}
+  .audience.show{display:block}
+  .audbar{height:8px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin:6px 0}
+  .audbar>i{display:block;height:100%;background:var(--ring);width:0%}
+  .note{text-align:center;margin:8px 0;color:#bfe1ff;font-weight:800}
+  .cta-wrap{display:flex;justify-content:center;margin-top:8px}
+  .start{border:0;border-radius:18px;padding:14px 22px;font-size:18px;font-weight:900;cursor:pointer;
+         background:linear-gradient(135deg,#ffd166,#ff7e67);color:#181818;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+  .toast{position:fixed;inset:auto 0 18px 0;display:none;justify-content:center;z-index:40}
   .toast>div{background:rgba(26,41,58,.95);color:#e6f2ff;border:1px solid rgba(255,255,255,.1);padding:12px 16px;border-radius:14px;
-    box-shadow:0 16px 40px rgba(0,0,0,.35); font-weight:800;}
-  .rpgTitle{ font-size:22px; text-align:center; color:#9ad0ff; margin-top:8px; font-weight:900;}
-  .note{ text-align:center; margin:8px 0; color:#bfe1ff; font-weight:800}
-  .audience{ margin:6px 2px 0; display:none;}
-  .audience.show{ display:block;}
-  .audbar{height:8px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin:8px 0;}
-  .audbar>i{display:block;height:100%;background:var(--ring)}
+             box-shadow:0 16px 40px rgba(0,0,0,.35);font-weight:800}
 </style>
 </head>
 <body>
-
 <div class="container">
   <div class="panel">
     <h1>— لعبة الأسئلة —</h1>
     <div class="rpgTitle">Fly Express</div>
-    <div class="sub" id="subline">العب واكسب — لديك 30 ثانية لكل سؤال ⏳ إجابة واحدة فقط</div>
+    <div class="sub" id="subline">العب واكسب — 30 ثانية لكل سؤال ⏳ إجابة واحدة فقط</div>
 
-    <!-- وسائل المساعدة -->
     <div class="lifelines">
       <button id="life5050" class="life-btn">50:50</button>
       <button id="lifeAudience" class="life-btn">رأي الجمهور</button>
       <button id="lifeSkip" class="life-btn">تغيير السؤال</button>
-      <button id="musicBtn" class="music-toggle">🎵 موسيقى</button>
     </div>
 
-    <!-- الإحصائيات -->
     <div class="stats">
       <div class="pill" id="timePill">الوقت: 30 ث</div>
       <div class="pill" id="stepPill">السؤال: 1/70</div>
-      <div class="pill" id="prizePill">الجوائز: 30/50/70 — العب واكسب</div>
+      <div class="pill" id="prizePill">الجوائز: 30/40/70 — العب واكسب</div>
     </div>
 
-    <!-- الصندوق -->
     <div class="questionBox">
       <div class="meter"><i id="meter"></i></div>
       <div class="q" id="qText">اضغط “ابدأ اللعب” لبدء الجولة</div>
       <div class="answers" id="answers"></div>
 
-      <!-- رأي الجمهور -->
       <div id="audiencePanel" class="audience">
         <div style="font-weight:900;color:#9ad0ff">نتيجة رأي الجمهور:</div>
-        <div id="audA" class="audbar"><i style="width:0%"></i></div>
-        <div id="audB" class="audbar"><i style="width:0%"></i></div>
-        <div id="audC" class="audbar"><i style="width:0%"></i></div>
-        <div id="audD" class="audbar"><i style="width:0%"></i></div>
+        <div id="audA" class="audbar"><i></i></div>
+        <div id="audB" class="audbar"><i></i></div>
+        <div id="audC" class="audbar"><i></i></div>
+        <div id="audD" class="audbar"><i></i></div>
       </div>
     </div>
 
-    <!-- شريط تحت -->
-    <div class="note" id="note">بالتوفيق 🌸 — اضغط “ابدأ اللعب” للبدء!</div>
-
-    <div class="cta-wrap">
-      <button id="startBtn" class="start">🚀 ابدأ اللعب</button>
-    </div>
+    <div class="note" id="note">بالتوفيق 🌸 — اضغط “ابدأ اللعب”</div>
+    <div class="cta-wrap"><button id="startBtn" class="start">🚀 ابدأ اللعب</button></div>
   </div>
 </div>
 
-<!-- أصوات -->
-<audio id="bgm" preload="auto" loop>
-  <source src="assets/sounds/game-bgm.mp3" type="audio/mpeg" />
-</audio>
-<audio id="sfxRight" preload="auto">
-  <source src="assets/sounds/correct.mp3" type="audio/mpeg" />
-</audio>
+<!-- صوت كليك فقط -->
 <audio id="sfxClick" preload="auto">
-  <source src="assets/sounds/click.mp3" type="audio/mpeg" />
-</audio>
-<audio id="sfxWrong" preload="auto">
-  <source src="assets/sounds/wrong.mp3" type="audio/mpeg" />
+  <source src="assets/sounds/click.mp3" type="audio/mpeg">
 </audio>
 
-<div id="toast" class="toast" style="display:none"><div id="toastMsg"></div></div>
+<div id="toast" class="toast"><div id="toastMsg"></div></div>
 
 <script>
-/* ===================== بيانات الأسئلة ===================== */
-/* لو عندك ملف خارجي (questions.js) فيه const QUESTIONS = [...]; الكود هيستخدمه تلقائيًا */
-const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
-? window.QUESTIONS
-: [
-  /* أمثلة — استبدلها بملف أسئلتك الـ 70 */
+/* ============= إعداد واتساب ============= */
+// عدّل الرقم أدناه إلى رقم الواتساب الذي يصله إشعار الجوائز (بصيغة دولية بدون +)
+const WHATSAPP_NUMBER = "201234567890"; // مثال: 2010xxxxxxx
+
+function sendWhatsAppPrize(step){
+  const msg = `مبروك! وصلت للمرحلة ${step} في لعبة Fly Express وحصلت على جائزة 🎉`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  // محاولة فتح الواتساب تلقائيًا (قد يحتاج تفاعل المستخدم في بعض الأجهزة)
+  try { window.open(url, '_blank'); } catch(e) { location.href = url; }
+}
+
+/* ============= أسئلة (بدّلها بملفك) ============= */
+const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length) ? window.QUESTIONS : [
   {q:"ما عاصمة مصر؟", a:["القاهرة","الإسكندرية","الجيزة","المنصورة"], c:0},
   {q:"أطول نهر في العالم؟", a:["الأمازون","النيل","اليانغتسي","الكونغو"], c:1},
   {q:"كم عدد قارات العالم؟", a:["5","6","7","8"], c:2},
   {q:"من أول من أسلم من الصبيان؟", a:["علي بن أبي طالب","الحسن","زيد بن ثابت","عبدالله بن مسعود"], c:0},
   {q:"من مؤلف صحيح البخاري؟", a:["مسلم","البخاري","الترمذي","ابن ماجه"], c:1},
   {q:"عاصمة السعودية؟", a:["جدة","الرياض","المدينة","مكة"], c:1},
-  {q:"الغاز الذي نتنفسه؟", a:["الأكسجين","النيون","الهيدروجين","الهيليوم"], c:0},
-  {q:"كم ركعة في صلاة الفجر؟", a:["4","3","2","1"], c:2},
+  {q:"الغاز اللازم للتنفس؟", a:["الأكسجين","النيون","الهيدروجين","الهيليوم"], c:0},
+  {q:"كم ركعة في الفجر؟", a:["4","3","2","1"], c:2},
   {q:"تقع نجع حمادي في محافظة؟", a:["أسيوط","قنا","سوهاج","الأقصر"], c:1},
   {q:"أكبر قارة؟", a:["إفريقيا","أوروبا","آسيا","أمريكا الشمالية"], c:2},
 ];
 
-/* ===================== عناصر الواجهة ===================== */
+/* ============= عناصر DOM ============= */
 const qText = document.getElementById('qText');
 const answersWrap = document.getElementById('answers');
 const meter = document.getElementById('meter');
@@ -183,11 +138,10 @@ const stepPill = document.getElementById('stepPill');
 const prizePill = document.getElementById('prizePill');
 const startBtn = document.getElementById('startBtn');
 const note = document.getElementById('note');
-
+const subline = document.getElementById('subline');
 const btn5050 = document.getElementById('life5050');
 const btnAudience = document.getElementById('lifeAudience');
 const btnSkip = document.getElementById('lifeSkip');
-
 const audiencePanel = document.getElementById('audiencePanel');
 const audBars = {
   A: document.querySelector('#audA i'),
@@ -195,81 +149,54 @@ const audBars = {
   C: document.querySelector('#audC i'),
   D: document.querySelector('#audD i'),
 };
-
+const sfxClick = document.getElementById('sfxClick');
 const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toastMsg');
 
-const bgm = document.getElementById('bgm');
-const sfxRight = document.getElementById('sfxRight');
-const sfxClick = document.getElementById('sfxClick');
-const sfxWrong = document.getElementById('sfxWrong');
-const musicBtn = document.getElementById('musicBtn');
+/* ============= حالة اللعبة ============= */
+let idx=0, seconds=30, timer=null, isPlaying=false;
+let used5050=false, usedAudience=false, usedSkip=false;
 
-/* ===================== حالة اللعبة ===================== */
-let idx = 0;              // رقم السؤال (0..)
-let seconds = 30;         // وقت السؤال
-let timer = null;
-let used5050 = false;
-let usedAudience = false;
-let usedSkip = false;
-let isPlaying = false;
+/* ============= أدوات ============= */
+function playClick(){ try{sfxClick.currentTime=0;sfxClick.play().catch(()=>{});}catch(e){} }
+function showToast(msg,ms=2000){ toastMsg.textContent=msg; toast.style.display='flex'; setTimeout(()=>toast.style.display='none',ms); }
+function shuffle(a){ return a.sort(()=>Math.random()-.5); }
 
-/* ===================== أدوات ===================== */
-function showToast(msg, ms=2000){
-  toastMsg.textContent = msg;
-  toast.style.display = 'flex';
-  setTimeout(()=> toast.style.display='none', ms);
-}
-function safePlay(audio){ try { audio.currentTime=0; audio.play().catch(()=>{}); } catch(e){} }
-function startBGM(){
-  const p = bgm.play();
-  if (p && p.catch) p.catch(()=>{
-    const once=()=>{ bgm.play().catch(()=>{}); document.removeEventListener('click', once); };
-    document.addEventListener('click', once, {once:true});
-  });
-}
-musicBtn.addEventListener('click', ()=>{
-  if (bgm.paused){ bgm.play().catch(()=>{}); musicBtn.textContent='⏸️ إيقاف الموسيقى'; }
-  else { bgm.pause(); musicBtn.textContent='🎵 موسيقى'; }
-});
-
-/* ===================== منطق الجوائز واللافتات ===================== */
+/* ============= Milestones ============= */
 function checkMilestones(){
-  const step = idx+1;
-  if (step===30){ showToast("🎉 مبروك! كسبت توصيله مجاني"); note.textContent="العب واكسب — وصلت للمستوى 30 ✅"; }
-  if (step===50){ showToast("🎉🎉 مبروك! كسبت توصيلتين مجانًا"); note.textContent="العب واكسب — وصلت للمستوى 50 ✅"; }
-  if (step===70){ showToast("🏆 مبروك! كسبت 3 توصيلات مجانًا — نهاية اللعبة", 3500); note.textContent="إنجاز رائع! وصلت للسؤال 70"; endGame(true); }
+  const step = idx; // idx تم زيادته بعد الإجابة الصحيحة
+  if (step===30){ showToast("🎉 مبروك! كسبت توصيله مجاني"); subline.textContent="العب واكسب — وصلت للمرحلة 30 ✅"; sendWhatsAppPrize(30); }
+  if (step===40){ showToast("🎉🎉 مبروك! مكافأة عند المرحلة 40"); subline.textContent="العب واكسب — وصلت للمرحلة 40 ✅"; sendWhatsAppPrize(40); }
+  if (step===70){ showToast("🏆 مبروك! 3 توصيلات مجانية — نهاية اللعبة",3500); subline.textContent="إنجاز رائع — وصلت للسؤال 70"; sendWhatsAppPrize(70); endGame(true); }
 }
 
-/* ===================== عرض سؤال ===================== */
+/* ============= عرض سؤال ============= */
 function render(){
   const step = idx+1;
   stepPill.textContent = `السؤال: ${step}/70`;
   timePill.textContent = `الوقت: ${seconds} ث`;
+  prizePill.textContent = "الجوائز: 30/40/70 — العب واكسب";
   meter.style.width = `${(seconds/30)*100}%`;
   audiencePanel.classList.remove('show');
 
-  const item = QUESTIONS[idx % QUESTIONS.length]; // حماية لو أقل من 70
+  const item = QUESTIONS[idx % QUESTIONS.length];
   qText.textContent = `${step}. ${item.q}`;
 
-  // رسم الإجابات
-  answersWrap.innerHTML = '';
+  answersWrap.innerHTML="";
   item.a.forEach((text, i)=>{
-    const b = document.createElement('button');
-    b.className='ans';
-    b.textContent=text;
+    const b=document.createElement('button');
+    b.className='ans'; b.textContent=text;
     b.addEventListener('click', ()=> choose(i,b));
-    b.addEventListener('mousedown', ()=> safePlay(sfxClick));
+    b.addEventListener('mousedown', playClick);
     answersWrap.appendChild(b);
   });
 
-  // تفعيل/تعطيل وسائل المساعدة
   btn5050.disabled = used5050;
   btnAudience.disabled = usedAudience;
   btnSkip.disabled = usedSkip;
 }
 
-/* ===================== المؤقت ===================== */
+/* ============= مؤقت ============= */
 function tick(){
   seconds--;
   if (seconds<0){ gameOver("انتهى الوقت!"); return; }
@@ -277,117 +204,117 @@ function tick(){
   meter.style.width = `${(seconds/30)*100}%`;
 }
 
-/* ===================== اختيار إجابة ===================== */
-function choose(i, btn){
-  if (!isPlaying) return;
+/* ============= اختيار إجابة ============= */
+function choose(i,btn){
+  if(!isPlaying) return;
   disableAll(true);
   const item = QUESTIONS[idx % QUESTIONS.length];
-  if (i===item.c){
-    btn.classList.add('correct');
-    safePlay(sfxRight);
-    setTimeout(()=>{
+  const correct = i===item.c;
+  btn.classList.add(correct?'correct':'wrong');
+  playClick();
+
+  setTimeout(()=>{
+    if (correct){
       idx++;
+      if (idx>=70){ checkMilestones(); return; }
+      seconds=30; render(); disableAll(false);
       checkMilestones();
-      if (idx>=70){ return; } // endGame inside checkMilestones for step 70
-      seconds=30; render();
-      disableAll(false);
-    }, 600);
-  } else {
-    btn.classList.add('wrong');
-    safePlay(sfxWrong);
-    setTimeout(()=> gameOver("إجابة خاطئة!"), 700);
-  }
+    } else {
+      gameOver("إجابة خاطئة! تم الرجوع للبداية");
+    }
+  }, 520);
 }
 function disableAll(state){
   answersWrap.querySelectorAll('button.ans').forEach(b=> b.disabled=state);
 }
 
-/* ===================== وسائل المساعدة ===================== */
+/* ============= وسائل المساعدة ============= */
 btn5050.addEventListener('click', ()=>{
-  if (used5050) return;
-  used5050=true; btn5050.disabled=true;
+  if (used5050) return; used5050=true; btn5050.disabled=true; playClick();
   const item = QUESTIONS[idx % QUESTIONS.length];
   const bads = [0,1,2,3].filter(x=>x!==item.c);
-  // اخفاء خيارين عشوائيين خاطئين
   shuffle(bads).slice(0,2).forEach(h=>{
     const b = answersWrap.children[h];
-    if (b){ b.disabled=true; b.style.filter='grayscale(1) brightness(.7)'; b.style.opacity='.6'; }
+    if (b){ b.disabled=true; b.style.filter='grayscale(1) brightness(.68)'; b.style.opacity='.65'; }
   });
   showToast("تم حذف إجابتين");
 });
 btnAudience.addEventListener('click', ()=>{
-  if (usedAudience) return;
-  usedAudience=true; btnAudience.disabled=true;
+  if (usedAudience) return; usedAudience=true; btnAudience.disabled=true; playClick();
   const item = QUESTIONS[idx % QUESTIONS.length];
-  audiencePanel.classList.add('show');
   const dist = fakeAudience(item.c);
-  audBars.A.style.width = dist[0]+"%";
-  audBars.B.style.width = dist[1]+"%";
-  audBars.C.style.width = dist[2]+"%";
-  audBars.D.style.width = dist[3]+"%";
-  showToast("إظهار رأي الجمهور");
+  audiencePanel.classList.add('show');
+  audBars.A.style.width=dist[0]+"%";
+  audBars.B.style.width=dist[1]+"%";
+  audBars.C.style.width=dist[2]+"%";
+  audBars.D.style.width=dist[3]+"%";
+  showToast("رأي الجمهور ظهر");
 });
 btnSkip.addEventListener('click', ()=>{
-  if (usedSkip) return;
-  usedSkip=true; btnSkip.disabled=true;
-  showToast("تم تغيير السؤال، بالتوفيق!");
-  seconds=30; idx = Math.min(idx+1, 69); // انتقل للسؤال التالي
-  render();
+  if (usedSkip) return; usedSkip=true; btnSkip.disabled=true; playClick();
+  showToast("تم تغيير السؤال");
+  idx = Math.min(idx+1,69);
+  seconds=30; render();
 });
-
 function fakeAudience(correct){
-  // توزيعة بسيطة؛ 45-70% للإجابة الصحيحة
-  const good = Math.floor(45 + Math.random()*25);
-  let other1 = Math.floor((100-good) * (0.5+Math.random()*0.3));
-  let rest = 100-good-other1;
-  let other2 = Math.floor(rest * (0.4+Math.random()*0.3));
-  let other3 = 100-good-other1-other2;
-  let arr = [other1,other2,other3];
-  // وضع good في correct index
-  const res = [0,0,0,0];
-  let p=0;
-  for (let i=0;i<4;i++){
-    res[i] = (i===correct)? good : arr[p++];
-  }
-  return res;
+  const good = Math.floor(45+Math.random()*25);
+  const rest = 100-good;
+  const a = Math.floor(rest*(0.4+Math.random()*0.3));
+  const b = Math.floor((rest-a)*(0.45+Math.random()*0.25));
+  const c = 100-good-a-b;
+  const out=[a,b,c,0];
+  out.splice(correct,0,good);
+  out.length=4;
+  return out;
 }
-function shuffle(a){ return a.sort(()=>Math.random()-.5); }
 
-/* ===================== التحكم العام ===================== */
+/* ============= تحكم عام ============= */
 startBtn.addEventListener('click', startGame);
+
+function resetStateToStart(){
+  idx=0; seconds=30;
+  used5050=usedAudience=usedSkip=false;
+  audiencePanel.classList.remove('show');
+  qText.textContent = "اضغط “ابدأ اللعب” لبدء الجولة";
+  answersWrap.innerHTML = "";
+  meter.style.width = "100%";
+  stepPill.textContent = "السؤال: 1/70";
+  timePill.textContent = "الوقت: 30 ث";
+  subline.textContent = "العب واكسب — 30 ثانية لكل سؤال ⏳";
+}
+
 function startGame(){
-  if (isPlaying) return;
-  isPlaying=true; idx=0; seconds=30;
+  isPlaying=true;
+  clearInterval(timer);
+  seconds=30;
   used5050=usedAudience=usedSkip=false;
   startBtn.disabled=true;
-  note.textContent = "العب واكسب — بالتوفيق!";
+  note.textContent="بالتوفيق! العب واكسب";
   render();
-  clearInterval(timer);
-  timer=setInterval(tick, 1000);
-  startBGM();
+  timer=setInterval(tick,1000);
 }
+
 function endGame(won=false){
-  isPlaying=false; clearInterval(timer);
+  isPlaying=false;
+  clearInterval(timer);
   disableAll(true);
   startBtn.disabled=false;
   if (won){
     showToast("🏁 انتهت اللعبة — مبروك الجوائز!", 3000);
-    note.textContent = "ممتاز! تقدر تبدأ من جديد وتكسر رقمك 👑";
+    note.textContent="انتهت الجولة — اضغط 'ابدأ اللعب' للبدء من جديد";
   }
-}
-function gameOver(msg){
-  isPlaying=false; clearInterval(timer);
-  disableAll(true);
-  showToast(msg, 1800);
-  note.textContent = "انتهت الجولة — اضغط 'ابدأ اللعب' للبدء من جديد";
-  startBtn.disabled=false;
+  resetStateToStart();
 }
 
-/* سلامة التشغيل للموسيقى على الهواتف */
-window.addEventListener('DOMContentLoaded', ()=>{
-  // محاولة تشغيل هادئة
-  startBGM();
-});
+function gameOver(msg){
+  isPlaying=false;
+  clearInterval(timer);
+  disableAll(true);
+  showToast(msg,2000);
+  note.textContent="انتهت الجولة — اضغط 'ابدأ اللعب' للبدء من جديد";
+  startBtn.disabled=false;
+  resetStateToStart();   // ← يرجع فورًا لبداية اللعبة
+}
 </script>
 </body>
 </html>
