@@ -24,6 +24,7 @@
   }
   h1{margin:6px 0 2px;font-size:44px;text-align:center}
   .rpgTitle{font-size:22px;text-align:center;color:#9ad0ff;font-weight:900}
+  .winline{margin-top:8px;text-align:center;font-weight:900;color:#b9f6ca}
   .sub{ text-align:center;color:#bfe1ff;font-weight:800;margin-top:6px}
   .lifelines{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
   .life-btn{border:0;border-radius:14px;padding:10px 14px;font-weight:900;color:#0d1522;
@@ -63,7 +64,8 @@
   <div class="panel">
     <h1>— لعبة الأسئلة —</h1>
     <div class="rpgTitle">Fly Express</div>
-    <div class="sub" id="subline">العب واكسب — 30 ثانية لكل سؤال ⏳ إجابة واحدة فقط</div>
+    <div class="winline" id="winline">العب واكسب — جوائز عند 30 / 40 / 70</div>
+    <div class="sub" id="subline">30 ثانية لكل سؤال ⏳ إجابة واحدة — بالتوفيق 🌸</div>
 
     <div class="lifelines">
       <button id="life5050" class="life-btn">50:50</button>
@@ -96,8 +98,8 @@
   </div>
 </div>
 
-<!-- صوت كليك فقط -->
-<audio id="sfxClick" preload="auto">
+<!-- (اختياري) ملف صوت خارجي كليك إن حبيت تضيفه بنفس المسار -->
+<audio id="sfxClickFile" preload="auto">
   <source src="assets/sounds/click.mp3" type="audio/mpeg">
 </audio>
 
@@ -107,26 +109,24 @@
 /* ============= إعداد واتساب ============= */
 // عدّل الرقم أدناه إلى رقم الواتساب الذي يصله إشعار الجوائز (بصيغة دولية بدون +)
 const WHATSAPP_NUMBER = "201234567890"; // مثال: 2010xxxxxxx
-
 function sendWhatsAppPrize(step){
   const msg = `مبروك! وصلت للمرحلة ${step} في لعبة Fly Express وحصلت على جائزة 🎉`;
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-  // محاولة فتح الواتساب تلقائيًا (قد يحتاج تفاعل المستخدم في بعض الأجهزة)
   try { window.open(url, '_blank'); } catch(e) { location.href = url; }
 }
 
-/* ============= أسئلة (بدّلها بملفك) ============= */
+/* ============= أسئلة تجريبية ============= */
 const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length) ? window.QUESTIONS : [
   {q:"ما عاصمة مصر؟", a:["القاهرة","الإسكندرية","الجيزة","المنصورة"], c:0},
   {q:"أطول نهر في العالم؟", a:["الأمازون","النيل","اليانغتسي","الكونغو"], c:1},
   {q:"كم عدد قارات العالم؟", a:["5","6","7","8"], c:2},
   {q:"من أول من أسلم من الصبيان؟", a:["علي بن أبي طالب","الحسن","زيد بن ثابت","عبدالله بن مسعود"], c:0},
-  {q:"من مؤلف صحيح البخاري؟", a:["مسلم","البخاري","الترمذي","ابن ماجه"], c:1},
   {q:"عاصمة السعودية؟", a:["جدة","الرياض","المدينة","مكة"], c:1},
   {q:"الغاز اللازم للتنفس؟", a:["الأكسجين","النيون","الهيدروجين","الهيليوم"], c:0},
   {q:"كم ركعة في الفجر؟", a:["4","3","2","1"], c:2},
   {q:"تقع نجع حمادي في محافظة؟", a:["أسيوط","قنا","سوهاج","الأقصر"], c:1},
   {q:"أكبر قارة؟", a:["إفريقيا","أوروبا","آسيا","أمريكا الشمالية"], c:2},
+  {q:"أكبر محيط؟", a:["الأطلسي","الهندي","الهادئ","المتجمد"], c:2},
 ];
 
 /* ============= عناصر DOM ============= */
@@ -139,6 +139,8 @@ const prizePill = document.getElementById('prizePill');
 const startBtn = document.getElementById('startBtn');
 const note = document.getElementById('note');
 const subline = document.getElementById('subline');
+const winline = document.getElementById('winline');
+
 const btn5050 = document.getElementById('life5050');
 const btnAudience = document.getElementById('lifeAudience');
 const btnSkip = document.getElementById('lifeSkip');
@@ -149,25 +151,70 @@ const audBars = {
   C: document.querySelector('#audC i'),
   D: document.querySelector('#audD i'),
 };
-const sfxClick = document.getElementById('sfxClick');
-const toast = document.getElementById('toast');
-const toastMsg = document.getElementById('toastMsg');
+
+const sfxClickFile = document.getElementById('sfxClickFile');
+
+/* ============= صوت كليك يعمل بدون ملفات (WebAudio) ============= */
+let audioCtx;
+function playClick(){
+  // لو في ملف خارجي موجود هيشتغل، وإلا نولّد كليك بــ WebAudio
+  const triedFile = sfxClickFile && sfxClickFile.src && sfxClickFile.src.length>0;
+  if (triedFile){
+    try{
+      sfxClickFile.currentTime=0;
+      sfxClickFile.play().catch(()=>{ synthClick(); });
+      return;
+    }catch(e){ /* نكمّل بالـ WebAudio */ }
+  }
+  synthClick();
+}
+function synthClick(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type='square';
+    o.frequency.value = 800;      // نغمة عالية قصيرة
+    g.gain.value = 0.12;          // مستوى الصوت
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    // إنڤيلوب: انخفاض سريع (كليك)
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.06);
+    o.stop(audioCtx.currentTime + 0.06);
+  }catch(e){}
+}
 
 /* ============= حالة اللعبة ============= */
 let idx=0, seconds=30, timer=null, isPlaying=false;
 let used5050=false, usedAudience=false, usedSkip=false;
 
 /* ============= أدوات ============= */
-function playClick(){ try{sfxClick.currentTime=0;sfxClick.play().catch(()=>{});}catch(e){} }
-function showToast(msg,ms=2000){ toastMsg.textContent=msg; toast.style.display='flex'; setTimeout(()=>toast.style.display='none',ms); }
+function showToast(msg,ms=2000){ 
+  const toast=document.getElementById('toast'); const toastMsg=document.getElementById('toastMsg');
+  toastMsg.textContent=msg; toast.style.display='flex'; 
+  setTimeout(()=>toast.style.display='none',ms); 
+}
 function shuffle(a){ return a.sort(()=>Math.random()-.5); }
 
 /* ============= Milestones ============= */
 function checkMilestones(){
-  const step = idx; // idx تم زيادته بعد الإجابة الصحيحة
-  if (step===30){ showToast("🎉 مبروك! كسبت توصيله مجاني"); subline.textContent="العب واكسب — وصلت للمرحلة 30 ✅"; sendWhatsAppPrize(30); }
-  if (step===40){ showToast("🎉🎉 مبروك! مكافأة عند المرحلة 40"); subline.textContent="العب واكسب — وصلت للمرحلة 40 ✅"; sendWhatsAppPrize(40); }
-  if (step===70){ showToast("🏆 مبروك! 3 توصيلات مجانية — نهاية اللعبة",3500); subline.textContent="إنجاز رائع — وصلت للسؤال 70"; sendWhatsAppPrize(70); endGame(true); }
+  const step = idx; // تم زيادته بعد الإجابة الصحيحة
+  if (step===30){ 
+    showToast("🎉 مبروك! كسبت توصيله مجاني"); 
+    winline.textContent="العب واكسب — وصلت للمرحلة 30 ✅";
+    sendWhatsAppPrize(30); 
+  }
+  if (step===40){ 
+    showToast("🎉🎉 مبروك! مكافأة عند المرحلة 40"); 
+    winline.textContent="العب واكسب — وصلت للمرحلة 40 ✅";
+    sendWhatsAppPrize(40); 
+  }
+  if (step===70){ 
+    showToast("🏆 مبروك! 3 توصيلات مجانية — نهاية اللعبة",3500); 
+    winline.textContent="العب واكسب — أنهيت اللعبة ووصلت للسؤال 70 🏁";
+    sendWhatsAppPrize(70); 
+    endGame(true); 
+  }
 }
 
 /* ============= عرض سؤال ============= */
@@ -199,7 +246,7 @@ function render(){
 /* ============= مؤقت ============= */
 function tick(){
   seconds--;
-  if (seconds<0){ gameOver("انتهى الوقت!"); return; }
+  if (seconds<0){ gameOver("انتهى الوقت! تم الرجوع للبداية"); return; }
   timePill.textContent = `الوقت: ${seconds} ث`;
   meter.style.width = `${(seconds/30)*100}%`;
 }
@@ -229,8 +276,8 @@ function disableAll(state){
 }
 
 /* ============= وسائل المساعدة ============= */
-btn5050.addEventListener('click', ()=>{
-  if (used5050) return; used5050=true; btn5050.disabled=true; playClick();
+document.getElementById('life5050').addEventListener('click', ()=>{
+  if (used5050) return; used5050=true; playClick(); document.getElementById('life5050').disabled=true;
   const item = QUESTIONS[idx % QUESTIONS.length];
   const bads = [0,1,2,3].filter(x=>x!==item.c);
   shuffle(bads).slice(0,2).forEach(h=>{
@@ -239,19 +286,19 @@ btn5050.addEventListener('click', ()=>{
   });
   showToast("تم حذف إجابتين");
 });
-btnAudience.addEventListener('click', ()=>{
-  if (usedAudience) return; usedAudience=true; btnAudience.disabled=true; playClick();
+document.getElementById('lifeAudience').addEventListener('click', ()=>{
+  if (usedAudience) return; usedAudience=true; playClick(); document.getElementById('lifeAudience').disabled=true;
   const item = QUESTIONS[idx % QUESTIONS.length];
   const dist = fakeAudience(item.c);
   audiencePanel.classList.add('show');
-  audBars.A.style.width=dist[0]+"%";
-  audBars.B.style.width=dist[1]+"%";
-  audBars.C.style.width=dist[2]+"%";
-  audBars.D.style.width=dist[3]+"%";
+  document.querySelector('#audA i').style.width=dist[0]+"%";
+  document.querySelector('#audB i').style.width=dist[1]+"%";
+  document.querySelector('#audC i').style.width=dist[2]+"%";
+  document.querySelector('#audD i').style.width=dist[3]+"%";
   showToast("رأي الجمهور ظهر");
 });
-btnSkip.addEventListener('click', ()=>{
-  if (usedSkip) return; usedSkip=true; btnSkip.disabled=true; playClick();
+document.getElementById('lifeSkip').addEventListener('click', ()=>{
+  if (usedSkip) return; usedSkip=true; playClick(); document.getElementById('lifeSkip').disabled=true;
   showToast("تم تغيير السؤال");
   idx = Math.min(idx+1,69);
   seconds=30; render();
@@ -269,7 +316,7 @@ function fakeAudience(correct){
 }
 
 /* ============= تحكم عام ============= */
-startBtn.addEventListener('click', startGame);
+document.getElementById('startBtn').addEventListener('click', startGame);
 
 function resetStateToStart(){
   idx=0; seconds=30;
@@ -280,7 +327,8 @@ function resetStateToStart(){
   meter.style.width = "100%";
   stepPill.textContent = "السؤال: 1/70";
   timePill.textContent = "الوقت: 30 ث";
-  subline.textContent = "العب واكسب — 30 ثانية لكل سؤال ⏳";
+  subline.textContent = "30 ثانية لكل سؤال ⏳ إجابة واحدة — بالتوفيق 🌸";
+  winline.textContent = "العب واكسب — جوائز عند 30 / 40 / 70";
 }
 
 function startGame(){
@@ -288,7 +336,7 @@ function startGame(){
   clearInterval(timer);
   seconds=30;
   used5050=usedAudience=usedSkip=false;
-  startBtn.disabled=true;
+  document.getElementById('startBtn').disabled=true;
   note.textContent="بالتوفيق! العب واكسب";
   render();
   timer=setInterval(tick,1000);
@@ -298,7 +346,7 @@ function endGame(won=false){
   isPlaying=false;
   clearInterval(timer);
   disableAll(true);
-  startBtn.disabled=false;
+  document.getElementById('startBtn').disabled=false;
   if (won){
     showToast("🏁 انتهت اللعبة — مبروك الجوائز!", 3000);
     note.textContent="انتهت الجولة — اضغط 'ابدأ اللعب' للبدء من جديد";
@@ -312,8 +360,8 @@ function gameOver(msg){
   disableAll(true);
   showToast(msg,2000);
   note.textContent="انتهت الجولة — اضغط 'ابدأ اللعب' للبدء من جديد";
-  startBtn.disabled=false;
-  resetStateToStart();   // ← يرجع فورًا لبداية اللعبة
+  document.getElementById('startBtn').disabled=false;
+  resetStateToStart();   // يرجع فورًا للبداية
 }
 </script>
 </body>
